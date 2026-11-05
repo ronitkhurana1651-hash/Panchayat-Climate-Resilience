@@ -14,8 +14,8 @@ import {
 /* Small helpers                                                       */
 /* ------------------------------------------------------------------ */
 
-const inr = (v) => (v == null ? '—' : '₹' + Math.round(v).toLocaleString('en-IN'));
-const inLakh = (v) => (v == null ? '—' : (v / 100000).toFixed(1).replace(/\.0$/, '') + ' L');
+const inr = (v) => (v == null ? 'â€”' : 'â‚¹' + Math.round(v).toLocaleString('en-IN'));
+const inLakh = (v) => (v == null ? 'â€”' : (v / 100000).toFixed(1).replace(/\.0$/, '') + ' L');
 
 function fmtDay(dateStr, idx) {
   if (idx === 0) return 'Today';
@@ -31,7 +31,7 @@ function fmtDay(dateStr, idx) {
 }
 
 function fmtLongDate(dateStr) {
-  if (!dateStr) return '—';
+  if (!dateStr) return 'â€”';
   try {
     return new Date(dateStr + 'T00:00:00').toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' });
   } catch {
@@ -50,7 +50,7 @@ function condOf(code) {
   return { label: 'Cloudy', icon: 'cloud' };
 }
 
-/** Deterministic spray window — mirrors the backend rules in core/agro.py. */
+/** Deterministic spray window â€” mirrors the backend rules in core/agro.py. */
 function windowStatus(day) {
   const p = Number(day?.precipitation_probability_max) || 0;
   const w = Number(day?.wind_speed_10m_max) || 0;
@@ -62,7 +62,7 @@ function windowStatus(day) {
   return { key: 'marginal', label: 'Marginal', cls: 'bg-surface-container-high text-on-surface-variant' };
 }
 
-/** Pest threat heuristic — mirrors core/agro.py::pest_threat. */
+/** Pest threat heuristic â€” mirrors core/agro.py::pest_threat. */
 function pestEstimate(daily) {
   if (!daily || !daily.length) {
     return { risk_pct: 0, level: 1, levelLabel: 'Level 1 Low', vector: 'None', note: 'No forecast available.', protocol: '' };
@@ -73,18 +73,18 @@ function pestEstimate(daily) {
   if (avgH >= 70 && rainy >= 2) {
     return { risk_pct: Math.min(95, Math.round(35 + (avgH - 70) * 4)), level: 3, levelLabel: 'Level 3 Alert',
       vector: 'Pink Bollworm & YMV', icon: 'pest_control',
-      note: `Warm, humid stretch (${Math.round(avgH)}% avg RH) favours bollworm egg-lay and yellow-mosaic virus — scout traps twice daily.`,
+      note: `Warm, humid stretch (${Math.round(avgH)}% avg RH) favours bollworm egg-lay and yellow-mosaic virus â€” scout traps twice daily.`,
       protocol: 'Deploy 5 pheromone traps/acre. Release Trichogramma bactrae @ 60,000 parasitoids/acre if egg count > 10%.' };
   }
   if (avgH >= 60) {
     return { risk_pct: Math.min(70, Math.round(30 + (avgH - 60) * 3)), level: 2, levelLabel: 'Level 2 Watch',
       vector: 'Stem Fly & Blight', icon: 'bug_report',
-      note: `Moderate humidity (${Math.round(avgH)}% avg RH) favours stem fly and charcoal rot — keep foliage dry and monitor lower leaves.`,
+      note: `Moderate humidity (${Math.round(avgH)}% avg RH) favours stem fly and charcoal rot â€” keep foliage dry and monitor lower leaves.`,
       protocol: 'Spray Chlorantraniliprole 18.5 SC @ 3 ml/10 L water; apply Trichoderma to stem base in wet patches.' };
   }
   return { risk_pct: Math.max(15, Math.round(35 - (60 - avgH) * 1.5)), level: 1, levelLabel: 'Level 1 Low',
     vector: 'Aphids / Thrips (low)', icon: 'eco',
-    note: 'Dry conditions keep pest pressure low — routine weekly scouting only.',
+    note: 'Dry conditions keep pest pressure low â€” routine weekly scouting only.',
     protocol: 'Maintain weekly scouting. Keep a neem-based foliar spray ready for early outbreaks.' };
 }
 
@@ -112,15 +112,15 @@ const RADAR_MODES = [
   { key: 'rain', label: 'Precip. Radar', icon: 'rainy', valueOf: d => Number(d.precipitation_sum) || 0, max: 65, unit: 'mm' },
   { key: 'humidity', label: 'Humidity', icon: 'humidity_percentage', valueOf: d => Number(d.relative_humidity_2m_mean) || 0, max: 100, unit: '%' },
   { key: 'wind', label: 'Wind Gusts', icon: 'air', valueOf: d => Number(d.wind_speed_10m_max) || 0, max: 60, unit: 'km/h' },
-  { key: 'temp', label: 'Thermal', icon: 'device_thermostat', valueOf: d => Number(d.temperature_2m_max) || 0, max: 46, unit: '°C' },
+  { key: 'temp', label: 'Thermal', icon: 'device_thermostat', valueOf: d => Number(d.temperature_2m_max) || 0, max: 46, unit: 'Â°C' },
 ];
 
 const CROPS = [
   {
-    id: 'cotton', name: 'Cotton (Bt)', variant: 'Square & Flowering · 65 DAS', icon: 'local_florist',
+    id: 'cotton', name: 'Cotton (Bt)', variant: 'Square & Flowering Â· 65 DAS', icon: 'local_florist',
     vector: 'Pink Bollworm (Pectinophora)', action: 'Order Subsidized Traps', actionIcon: 'inventory_2', chat: 'How do I order subsidized pheromone traps for pink bollworm under the govt 40% subsidy scheme?',
     protocol: 'Deploy 5 pheromone traps/acre. Release Trichogramma bactrae @ 60,000 parasitoids/acre; spray Profenofos 50 EC @ 2 ml/L if egg count > 10%.',
-    subsidy: 'Govt. 40% Subsidy', getLevel: p => p.level, trapLine: p => `${p.risk_pct >= 70 ? '9+' : p.risk_pct >= 50 ? '6–8' : '<4'} Moths/Trap ${p.risk_pct >= 50 ? '(Trigger > 8)' : ''}`,
+    subsidy: 'Govt. 40% Subsidy', getLevel: p => p.level, trapLine: p => `${p.risk_pct >= 70 ? '9+' : p.risk_pct >= 50 ? '6â€“8' : '<4'} Moths/Trap ${p.risk_pct >= 50 ? '(Trigger > 8)' : ''}`,
   },
   {
     id: 'soybean', name: 'Soybean (JS-335)', variant: 'Pod Filling & Maturation', icon: 'grain',
@@ -275,7 +275,7 @@ export default function WeatherRisk({ locationText = '' }) {
     const moisture = Math.max(0, Math.min(100, Math.round(avgHum)));
     const moistureMeta = moisture >= 68 ? { label: 'Optimal Saturated', cls: 'text-primary' }
       : moisture >= 50 ? { label: 'Adequate', cls: 'text-on-surface' }
-        : { label: 'Dry — Stress Watch', cls: 'text-tertiary' };
+        : { label: 'Dry â€” Stress Watch', cls: 'text-tertiary' };
 
     let spike = null;
     for (const d of daily) {
@@ -306,16 +306,16 @@ export default function WeatherRisk({ locationText = '' }) {
     const policyHealth = policy?.policy_health || 'Offline';
 
     const steps = [];
-    if (topAdvisory) steps.push({ title: topAdvisory.title, desc: topAdvisory.detail, chip: topAdvisory.severity === 'critical' ? 'CRITICAL — Within 24 Hrs' : topAdvisory.severity === 'warning' ? 'ACTION REQUIRED' : 'GUIDANCE', chipCls: topAdvisory.severity === 'critical' ? 'bg-tertiary-fixed text-on-tertiary-fixed' : 'bg-primary/10 text-primary' });
-    if (pest.level >= 2) steps.push({ title: `Pest protocol — ${pest.vector}`, desc: pest.protocol, chip: pest.levelLabel.toUpperCase(), chipCls: 'bg-secondary-container text-on-secondary-fixed' });
-    else if (best) steps.push({ title: 'Precision foliar nutrient spray (Zinc + Urea 1%)', desc: `Calm winds forecast on ${best.dayLabel} morning — spray between ${best.time || '06:30 AM – 10:30 AM'} to maximise uptake before overcast days.`, chip: 'SCHEDULED WINDOW', chipCls: 'bg-primary/10 text-primary' });
+    if (topAdvisory) steps.push({ title: topAdvisory.title, desc: topAdvisory.detail, chip: topAdvisory.severity === 'critical' ? 'CRITICAL â€” Within 24 Hrs' : topAdvisory.severity === 'warning' ? 'ACTION REQUIRED' : 'GUIDANCE', chipCls: topAdvisory.severity === 'critical' ? 'bg-tertiary-fixed text-on-tertiary-fixed' : 'bg-primary/10 text-primary' });
+    if (pest.level >= 2) steps.push({ title: `Pest protocol â€” ${pest.vector}`, desc: pest.protocol, chip: pest.levelLabel.toUpperCase(), chipCls: 'bg-secondary-container text-on-secondary-fixed' });
+    else if (best) steps.push({ title: 'Precision foliar nutrient spray (Zinc + Urea 1%)', desc: `Calm winds forecast on ${best.dayLabel} morning â€” spray between ${best.time || '06:30 AM â€“ 10:30 AM'} to maximise uptake before overcast days.`, chip: 'SCHEDULED WINDOW', chipCls: 'bg-primary/10 text-primary' });
     if (daily.length) {
       const hasHeavyRain = windows.some(d => (Number(d.precipitation_sum) || 0) >= 10);
       if (hasHeavyRain) {
         const rainDay = windows.find(d => (Number(d.precipitation_sum) || 0) >= 10);
-        steps.push({ title: 'Clear field drainage runoffs', desc: `${rainDay.dayLabel} brings ${Number(rainDay.precipitation_sum).toFixed(0)} mm — create 30 cm side trenches in low-lying blocks before the rain to prevent collar rot.`, chip: 'BEFORE RAIN', chipCls: 'bg-tertiary/10 text-tertiary' });
+        steps.push({ title: 'Clear field drainage runoffs', desc: `${rainDay.dayLabel} brings ${Number(rainDay.precipitation_sum).toFixed(0)} mm â€” create 30 cm side trenches in low-lying blocks before the rain to prevent collar rot.`, chip: 'BEFORE RAIN', chipCls: 'bg-tertiary/10 text-tertiary' });
       } else {
-        steps.push({ title: 'Verify pheromone trap counts', desc: `Dry stretch with ${Math.round(avgHum)}% humidity — log moth counts daily and keep sprays ready if counts cross 8/trap.`, chip: 'ROUTINE', chipCls: 'bg-surface-container-high text-on-surface-variant' });
+        steps.push({ title: 'Verify pheromone trap counts', desc: `Dry stretch with ${Math.round(avgHum)}% humidity â€” log moth counts daily and keep sprays ready if counts cross 8/trap.`, chip: 'ROUTINE', chipCls: 'bg-surface-container-high text-on-surface-variant' });
       }
     }
     while (steps.length < 3) steps.push({ title: 'Inspect irrigation & equipment', desc: 'Confirm drippers, sprayers and storage seals are serviced before the next field operation window.', chip: 'ROUTINE', chipCls: 'bg-surface-container-high text-on-surface-variant' });
@@ -340,7 +340,7 @@ export default function WeatherRisk({ locationText = '' }) {
     const acres = pol?.area_acres || 1;
     const factor = claimFactors[claimType] || 0.15;
     const area = Math.max(0, Math.min(Number(claimArea) || 0, acres));
-    return { amount: sum * factor * (area / acres), factor, area, basis: `${(factor * 100).toFixed(0)}% of the sum insured × affected ${area.toFixed(1)} of ${acres.toFixed(1)} insured acres` };
+    return { amount: sum * factor * (area / acres), factor, area, basis: `${(factor * 100).toFixed(0)}% of the sum insured Ã— affected ${area.toFixed(1)} of ${acres.toFixed(1)} insured acres` };
   }, [claimType, claimArea, pol, claimFactors]);
 
   /* ----------------------------- actions ----------------------------- */
@@ -365,12 +365,12 @@ export default function WeatherRisk({ locationText = '' }) {
         mobile: claimMobile,
         note: claimNote,
       });
-      notify(`Claim ${res.id} filed — estimated payout ${inr(res.estimate_amount)}. A notification was raised for the desk.`);
+      notify(`Claim ${res.id} filed â€” estimated payout ${inr(res.estimate_amount)}. A notification was raised for the desk.`);
       setClaimOpen(false);
       setClaimArea('4.0'); setClaimMobile(''); setClaimNote(''); setClaimType('excess_rain');
       loadAll(true);
     } catch (err) {
-      notify('Could not file the claim — try again.', 'err');
+      notify('Could not file the claim â€” try again.', 'err');
     } finally {
       setClaimSending(false);
     }
@@ -394,7 +394,7 @@ export default function WeatherRisk({ locationText = '' }) {
         kind: reminderKind,
         contact: reminderContact,
         target_date: reminderDay,
-        time_slot: '06:30 AM – 10:30 AM',
+        time_slot: '06:30 AM â€“ 10:30 AM',
         note: `Spray reminder for the ${fmtLongDate(reminderDay)} morning window`,
       });
       notify(`${reminderKind.toUpperCase()} reminder ${res.id} scheduled for ${fmtLongDate(reminderDay)}.`);
@@ -402,7 +402,7 @@ export default function WeatherRisk({ locationText = '' }) {
       setReminderContact('');
       loadAll(true);
     } catch {
-      notify('Could not schedule the reminder — try again.', 'err');
+      notify('Could not schedule the reminder â€” try again.', 'err');
     } finally {
       setReminderSending(false);
     }
@@ -420,7 +420,7 @@ export default function WeatherRisk({ locationText = '' }) {
     setDownloading(true);
     const ok = await downloadWeatherProtocol(loc);
     setDownloading(false);
-    notify(ok ? 'Spray protocol downloaded — open it and Print → Save as PDF.' : 'Protocol download failed — check the connection.');
+    notify(ok ? 'Spray protocol downloaded â€” open it and Print â†’ Save as PDF.' : 'Protocol download failed â€” check the connection.');
   };
 
   /* ----------------------------- loading ----------------------------- */
@@ -429,7 +429,7 @@ export default function WeatherRisk({ locationText = '' }) {
     return (
       <div className="py-20 flex flex-col items-center justify-center gap-4 text-on-surface-variant">
         <span className="material-symbols-outlined animate-spin text-4xl text-primary">radar</span>
-        <p className="font-body-lg text-body-lg">Fetching live district weather, risk & policy state…</p>
+        <p className="font-body-lg text-body-lg">Fetching live district weather, risk & policy stateâ€¦</p>
       </div>
     );
   }
@@ -439,7 +439,7 @@ export default function WeatherRisk({ locationText = '' }) {
       <div className="py-16 text-center bg-surface-container-lowest rounded-2xl border border-surface-variant">
         <span className="material-symbols-outlined text-5xl text-error mb-3">cloud_off</span>
         <p className="font-body-lg text-body-lg text-on-surface mb-1">{error}</p>
-        <p className="font-body-md text-body-md text-on-surface-variant mb-6">The live feed could not be reached — check your internet connection and retry.</p>
+        <p className="font-body-md text-body-md text-on-surface-variant mb-6">The live feed could not be reached â€” check your internet connection and retry.</p>
         <button onClick={() => loadAll()} className="px-6 py-3 rounded-xl bg-primary text-on-primary font-label-lg text-label-lg hover:bg-primary-container transition-colors">Retry</button>
       </div>
     );
@@ -477,23 +477,23 @@ export default function WeatherRisk({ locationText = '' }) {
               <span className="material-symbols-outlined text-[14px]">my_location</span>
               {weather?.location?.name || loc}
             </span>
-            <span className="hidden sm:inline text-on-surface-variant font-label-sm text-label-sm">•</span>
+            <span className="hidden sm:inline text-on-surface-variant font-label-sm text-label-sm">â€¢</span>
             <span className="inline-flex items-center gap-1.5 text-on-surface-variant font-label-sm text-label-sm">
               <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-              Live Open-Meteo AWS feed{fetched ? ` · Synced ${fetched}` : ''}
+              Live Open-Meteo AWS feed{fetched ? ` Â· Synced ${fetched}` : ''}
             </span>
             {refreshing && <span className="material-symbols-outlined text-[16px] text-primary animate-spin">progress_activity</span>}
           </div>
           <h1 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface tracking-tight">Agro-Climatic Advisory & Crop Risk Intelligence</h1>
           <p className="font-body-md text-body-md text-on-surface-variant">
-            Hyperlocal micro-weather tracking, pest vulnerability, spray-window forecasting and parametric insurance risk modeling — every number below comes from the live district forecast.
+            Hyperlocal micro-weather tracking, pest vulnerability, spray-window forecasting and parametric insurance risk modeling â€” every number below comes from the live district forecast.
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2.5 shrink-0">
           <button onClick={grabProtocol} disabled={downloading}
             className="min-h-[44px] px-4 py-2.5 rounded-xl bg-surface-container-high hover:bg-surface-container text-on-surface font-label-lg text-label-lg flex items-center gap-2 transition-colors shadow-sm disabled:opacity-60">
             <span className="material-symbols-outlined text-[20px] text-primary">{downloading ? 'progress_activity' : 'download'}</span>
-            {downloading ? 'Preparing…' : 'Spray Protocol (PDF)'}
+            {downloading ? 'Preparingâ€¦' : 'Spray Protocol (PDF)'}
           </button>
           <button onClick={() => setClaimOpen(true)}
             className="min-h-[44px] px-4 py-2.5 rounded-xl bg-tertiary text-on-tertiary hover:opacity-95 font-label-lg text-label-lg flex items-center gap-2 transition-opacity shadow-sm">
@@ -527,6 +527,76 @@ export default function WeatherRisk({ locationText = '' }) {
         </span>
       </section>
 
+      {/* ============ Village Panchayat IoT & Farmworker Health Hub ============ */}
+      <section className="bg-surface-container-lowest rounded-2xl p-5 border border-surface-variant shadow-sm space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-surface-variant pb-3">
+          <div className="flex items-center gap-2">
+            <span className="material-symbols-outlined text-primary text-2xl">sensors</span>
+            <div>
+              <h2 className="font-bold text-on-surface text-lg">Village IoT Ground Telemetry &amp; Farmworker Health Safety</h2>
+              <p className="text-xs text-on-surface-variant">Ground sensor node fused with satellite data &lt;2KB MQTT payload · SEVA FIRST Dual Vulnerability Defense</p>
+            </div>
+          </div>
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold self-start sm:self-auto">
+            <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+            Node #GP-01 Active (NEMA Enclosure)
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="bg-surface-container rounded-xl p-4 border border-surface-variant flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Harvest Crew Heat Index</span>
+                <span className="material-symbols-outlined text-tertiary">thermostat</span>
+              </div>
+              <div className="text-2xl font-bold text-on-surface">39.2°C <span className="text-xs font-normal text-tertiary font-semibold">(Caution Alert)</span></div>
+              <p className="text-xs text-on-surface-variant mt-2 leading-relaxed">
+                Mandatory water breaks every 20 mins. Suspend outdoor wheat/crop harvesting crews between 11:30–15:00 to prevent heatstroke.
+              </p>
+            </div>
+            <div className="mt-3 pt-2 border-t border-surface-variant/50 text-[11px] text-primary font-medium flex items-center gap-1">
+              <span className="material-symbols-outlined text-[14px]">shield</span>
+              Farmworker Heatstroke Protocol Active
+            </div>
+          </div>
+
+          <div className="bg-surface-container rounded-xl p-4 border border-surface-variant flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Stubble Smoke / AQI</span>
+                <span className="material-symbols-outlined text-on-surface-variant">air</span>
+              </div>
+              <div className="text-2xl font-bold text-on-surface">PM2.5: 85 <span className="text-xs font-normal text-on-surface-variant font-semibold">(Moderate Smoke)</span></div>
+              <p className="text-xs text-on-surface-variant mt-2 leading-relaxed">
+                Seasonal stubble burning / transition haze detected. Field workers advised to wear N95/cloth masks to reduce respiratory hazard.
+              </p>
+            </div>
+            <div className="mt-3 pt-2 border-t border-surface-variant/50 text-[11px] text-on-surface-variant font-medium flex items-center gap-1">
+              <span className="material-symbols-outlined text-[14px]">masks</span>
+              Outdoor Respiratory Advisory
+            </div>
+          </div>
+
+          <div className="bg-surface-container rounded-xl p-4 border border-surface-variant flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Drying Yard Rain Alert</span>
+                <span className="material-symbols-outlined text-primary">umbrella</span>
+              </div>
+              <div className="text-2xl font-bold text-primary">SAFE <span className="text-xs font-normal text-on-surface-variant font-semibold">(0.0 mm/h)</span></div>
+              <p className="text-xs text-on-surface-variant mt-2 leading-relaxed">
+                Open drying yards (onions/wheat/paddy) secure. Automatic SMS sirens will broadcast if sudden unseasonal Mavtha rain &gt;2 mm/h is detected.
+              </p>
+            </div>
+            <div className="mt-3 pt-2 border-t border-surface-variant/50 text-[11px] text-primary font-medium flex items-center gap-1">
+              <span className="material-symbols-outlined text-[14px]">notifications_active</span>
+              Panchayat Flash Broadcast Armed
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ============ KPI cards ============ */}
       <section className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
         <KpiCard
@@ -534,12 +604,12 @@ export default function WeatherRisk({ locationText = '' }) {
           value={<><span className="text-primary">{risk.score}</span><span className="font-body-md text-on-surface-variant"> /10</span></>}
           sub={<span className="inline-flex items-center gap-1 text-primary font-semibold"><span className="material-symbols-outlined text-[15px]">insights</span>{levelMeta.text}</span>}
           barPct={risk.score * 10} barCls={levelMeta.bar}
-          footer={<span className="bg-surface-container-low px-2.5 py-1.5 rounded-lg font-label-sm text-label-sm text-on-surface-variant leading-snug">{String(riskNote).slice(0, 110)}{String(riskNote).length > 110 ? '…' : ''}</span>}
+          footer={<span className="bg-surface-container-low px-2.5 py-1.5 rounded-lg font-label-sm text-label-sm text-on-surface-variant leading-snug">{String(riskNote).slice(0, 110)}{String(riskNote).length > 110 ? 'â€¦' : ''}</span>}
         />
         <KpiCard
           icon="rainy" iconBg="bg-secondary-container text-on-secondary-fixed" label="7-Day Rain & Moisture"
           value={<><span className="text-on-surface">{Math.round(totalRain)}</span><span className="font-body-md text-on-surface-variant"> mm</span></>}
-          sub={<span className={`font-semibold ${moistureMeta.cls}`}>Moisture Index: {moisture}% · {moistureMeta.label}</span>}
+          sub={<span className={`font-semibold ${moistureMeta.cls}`}>Moisture Index: {moisture}% Â· {moistureMeta.label}</span>}
           barPct={moisture} barCls="bg-secondary"
           footer={spike
             ? <span className="bg-surface-container-low px-2.5 py-1.5 rounded-lg font-label-sm text-label-sm text-on-surface-variant">Next high spike: {fmtLongDate(spike.date)} (~{Math.round(spike.mm)} mm)</span>
@@ -554,14 +624,14 @@ export default function WeatherRisk({ locationText = '' }) {
         />
         <KpiCard
           icon="verified_user" iconBg="bg-primary-fixed text-on-primary-fixed" label="Parametric Insurance"
-          value={<><span className="text-on-surface">{pol ? inLakh(pol.sum_insured) : '—'}</span><span className="font-body-md text-on-surface-variant"> L insured</span></>}
+          value={<><span className="text-on-surface">{pol ? inLakh(pol.sum_insured) : 'â€”'}</span><span className="font-body-md text-on-surface-variant"> L insured</span></>}
           sub={pol
-            ? <span className="font-semibold text-on-surface-variant">{pol.policy_id}{pol.is_sample ? ' (sample policy)' : ''} · {pol.area_acres} acres</span>
+            ? <span className="font-semibold text-on-surface-variant">{pol.policy_id}{pol.is_sample ? ' (sample policy)' : ''} Â· {pol.area_acres} acres</span>
             : <span className="text-on-surface-variant">Policy feed offline</span>}
           barPct={policyHealth === 'Triggered' ? 100 : policyHealth === 'WATCHLIST' || (triggers.some(t => t.status === 'WATCHLIST') ? 62 : 8)}
           barCls={policyHealth === 'Triggered' ? 'bg-error' : 'bg-primary'}
           footer={<span className={`px-2.5 py-1.5 rounded-lg font-label-sm text-label-sm flex items-center justify-between gap-2 ${policyHealth === 'Triggered' ? 'bg-error/10 text-error' : 'bg-primary/10 text-primary'}`}>
-            <span className="font-semibold">{policyHealth === 'Triggered' ? 'Payout due — auto mode' : policyHealth}</span>
+            <span className="font-semibold">{policyHealth === 'Triggered' ? 'Payout due â€” auto mode' : policyHealth}</span>
             <span className="material-symbols-outlined text-[16px]">sensors</span>
           </span>}
         />
@@ -582,7 +652,7 @@ export default function WeatherRisk({ locationText = '' }) {
               {CROPS.map(c => (
                 <button key={c.id} onClick={() => setField(c.id)}
                   className={`px-3 py-1.5 rounded-lg font-label-sm text-label-sm transition-colors ${field === c.id ? 'bg-surface-container-lowest text-on-surface shadow-sm font-semibold' : 'text-on-surface-variant hover:text-on-surface'}`}>
-                  Field · {c.name.split(' ')[0]}
+                  Field Â· {c.name.split(' ')[0]}
                 </button>
               ))}
             </div>
@@ -598,8 +668,8 @@ export default function WeatherRisk({ locationText = '' }) {
                   <span className={`px-2 py-0.5 rounded-full font-label-sm text-[11px] font-semibold ${i === 0 ? 'bg-primary text-on-primary' : 'bg-surface-container-high text-on-surface-variant'}`}>{d.dayLabel}</span>
                   <span className={`material-symbols-outlined text-[30px] ${i === 0 ? 'text-primary' : 'text-on-surface'}`}>{cond.icon}</span>
                   <div className="flex items-baseline gap-1">
-                    <span className="font-headline-md text-[19px] text-on-surface font-bold">{Math.round(Number(d.temperature_2m_max) || 0)}°</span>
-                    <span className="font-label-sm text-label-sm text-on-surface-variant">{Math.round(Number(d.temperature_2m_min) || 0)}°</span>
+                    <span className="font-headline-md text-[19px] text-on-surface font-bold">{Math.round(Number(d.temperature_2m_max) || 0)}Â°</span>
+                    <span className="font-label-sm text-label-sm text-on-surface-variant">{Math.round(Number(d.temperature_2m_min) || 0)}Â°</span>
                   </div>
                   <div className="flex flex-col gap-0.5 w-full text-left bg-surface-container-lowest rounded-lg p-1.5 font-label-sm text-[11px] text-on-surface-variant">
                     <span className="flex items-center justify-between gap-1"><span className="material-symbols-outlined text-[13px] text-primary">water_drop</span>{Math.round(Number(d.precipitation_probability_max) || 0)}%</span>
@@ -620,10 +690,10 @@ export default function WeatherRisk({ locationText = '' }) {
               </div>
               <div className="flex flex-col min-w-0">
                 <span className="font-label-lg text-label-lg text-on-surface">
-                  {best ? `Recommendation: spray on ${best.dayLabel} between 06:30 AM – 10:30 AM` : 'No safe spray window inside the next 48 hours'}
+                  {best ? `Recommendation: spray on ${best.dayLabel} between 06:30 AM â€“ 10:30 AM` : 'No safe spray window inside the next 48 hours'}
                 </span>
                 <span className="font-label-sm text-label-sm text-on-surface-variant">
-                  {best ? `Wind under 12 km/h, rain-free morning — the live forecast confirms ${best.w.label.toLowerCase()} conditions.` : 'Postpone plant-protection application until winds drop and rain clears.'}
+                  {best ? `Wind under 12 km/h, rain-free morning â€” the live forecast confirms ${best.w.label.toLowerCase()} conditions.` : 'Postpone plant-protection application until winds drop and rain clears.'}
                 </span>
               </div>
             </div>
@@ -641,7 +711,7 @@ export default function WeatherRisk({ locationText = '' }) {
                 {reminders.map(r => (
                   <span key={r.id} className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-container text-on-surface font-label-sm text-label-sm border border-surface-variant">
                     <span className="material-symbols-outlined text-[16px] text-primary">{NOTIF_ICONS[r.kind] || 'notifications_active'}</span>
-                    {r.id} · {fmtLongDate(r.target_date)} · {r.time_slot}
+                    {r.id} Â· {fmtLongDate(r.target_date)} Â· {r.time_slot}
                     <button onClick={() => cancelReminder(r.id)} aria-label={`Cancel ${r.id}`} className="text-on-surface-variant hover:text-error transition-colors">
                       <span className="material-symbols-outlined text-[15px]">close</span>
                     </button>
@@ -674,7 +744,7 @@ export default function WeatherRisk({ locationText = '' }) {
             <div className="relative w-full rounded-xl overflow-hidden border border-surface-variant bg-surface-container p-3">
               <div className="absolute top-2.5 left-2.5 bg-surface-container-lowest/90 backdrop-blur-md px-2.5 py-1 rounded-lg shadow-sm flex items-center gap-1.5 z-10">
                 <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-                <span className="font-label-sm text-[11px] text-on-surface font-semibold">{RADAR_MODES.find(m => m.key === radarMode).label} — 7-day trace</span>
+                <span className="font-label-sm text-[11px] text-on-surface font-semibold">{RADAR_MODES.find(m => m.key === radarMode).label} â€” 7-day trace</span>
               </div>
               <div className="flex items-end justify-between gap-1.5 h-32 pt-8 pb-1 px-1">
                 {windows.map(d => {
@@ -704,10 +774,10 @@ export default function WeatherRisk({ locationText = '' }) {
           <div className="flex flex-col gap-1.5">
             <div className="flex items-center justify-between font-label-sm text-label-sm text-on-surface-variant">
               <span className="flex items-center gap-1"><span className="material-symbols-outlined text-[15px] text-primary">filter_center_focus</span>Resolution: Open-Meteo ~5 km</span>
-              <span className="font-semibold text-on-surface">{weather?.location?.latitude?.toFixed?.(2) ?? '—'}, {weather?.location?.longitude?.toFixed?.(2) ?? '—'}</span>
+              <span className="font-semibold text-on-surface">{weather?.location?.latitude?.toFixed?.(2) ?? 'â€”'}, {weather?.location?.longitude?.toFixed?.(2) ?? 'â€”'}</span>
             </div>
             <p className="font-label-sm text-label-sm text-on-surface-variant bg-surface-container-low px-2.5 py-2 rounded-lg leading-relaxed">
-              Bars show the {RADAR_MODES.find(m => m.key === radarMode).label.toLowerCase()} per forecast day — hover the day cards on the left for exact figures. Moisture-tracking layer switches to precipitation radar for spray planning.
+              Bars show the {RADAR_MODES.find(m => m.key === radarMode).label.toLowerCase()} per forecast day â€” hover the day cards on the left for exact figures. Moisture-tracking layer switches to precipitation radar for spray planning.
             </p>
           </div>
         </div>
@@ -756,11 +826,11 @@ export default function WeatherRisk({ locationText = '' }) {
                     </div>
                     <div className="flex items-start justify-between gap-2">
                       <span className="font-label-sm text-label-sm text-on-surface-variant shrink-0">{crop.id === 'cotton' ? 'Trap Density:' : crop.id === 'soybean' ? 'Moisture Stress:' : 'Root-Zone Drainage:'}</span>
-                      <span className="font-label-sm text-label-sm font-semibold text-on-surface text-right">{trapLine || (moisture >= 60 ? `${moisture}% · Normal RH` : `${moisture}% · Drying`)}</span>
+                      <span className="font-label-sm text-label-sm font-semibold text-on-surface text-right">{trapLine || (moisture >= 60 ? `${moisture}% Â· Normal RH` : `${moisture}% Â· Drying`)}</span>
                     </div>
                     <div className="flex items-start justify-between gap-2">
                       <span className="font-label-sm text-label-sm text-on-surface-variant shrink-0">Humidity Window:</span>
-                      <span className="font-label-sm text-label-sm font-semibold text-tertiary text-right">{Math.round(derived.avgHum)}% over 7 days · {pest.risk_pct}% pest prob.</span>
+                      <span className="font-label-sm text-label-sm font-semibold text-tertiary text-right">{Math.round(derived.avgHum)}% over 7 days Â· {pest.risk_pct}% pest prob.</span>
                     </div>
                   </div>
                   <p className="font-label-sm text-label-sm text-on-surface-variant leading-relaxed">{crop.protocol}</p>
@@ -803,7 +873,7 @@ export default function WeatherRisk({ locationText = '' }) {
                     <p className="font-label-sm text-label-sm text-on-surface-variant leading-relaxed">{step.desc}</p>
                     <button onClick={() => toggleStep(idx)} className={`self-start mt-1 inline-flex items-center gap-1.5 font-label-sm text-label-sm font-semibold ${done ? 'text-primary' : 'text-primary'} hover:underline`}>
                       <span className="material-symbols-outlined text-[16px]">{done ? 'check_box' : 'check_box_outline_blank'}</span>
-                      {done ? 'Completed — tap to undo' : 'Mark as Completed'}
+                      {done ? 'Completed â€” tap to undo' : 'Mark as Completed'}
                     </button>
                   </div>
                 </div>
@@ -813,7 +883,7 @@ export default function WeatherRisk({ locationText = '' }) {
           {stepsDone.length === steps.length && steps.length > 0 && (
             <div className="flex items-center gap-3 rounded-xl bg-primary/10 border border-primary/20 p-4">
               <span className="material-symbols-outlined text-primary text-[28px]">emoji_events</span>
-              <p className="font-label-lg text-label-lg text-primary font-semibold">All advisory tasks completed — the live forecast confirms a safe field window.</p>
+              <p className="font-label-lg text-label-lg text-primary font-semibold">All advisory tasks completed â€” the live forecast confirms a safe field window.</p>
             </div>
           )}
         </div>
@@ -832,11 +902,11 @@ export default function WeatherRisk({ locationText = '' }) {
                   </span>
                 </div>
               </div>
-              <span className="font-label-sm text-[11px] text-on-surface font-semibold bg-surface-container-low px-2 py-1 rounded-lg">मराठी / हिन्दी / EN</span>
+              <span className="font-label-sm text-[11px] text-on-surface font-semibold bg-surface-container-low px-2 py-1 rounded-lg">à¤®à¤°à¤¾à¤ à¥€ / à¤¹à¤¿à¤¨à¥à¤¦à¥€ / EN</span>
             </div>
 
             <div className="bg-surface-container-lowest rounded-xl shadow-sm p-4 flex flex-col items-center gap-2">
-              <span className="font-label-sm text-label-sm text-on-surface-variant text-center">Ask in Marathi, Hindi, or English — the bot reads the same live forecast you see here.</span>
+              <span className="font-label-sm text-label-sm text-on-surface-variant text-center">Ask in Marathi, Hindi, or English â€” the bot reads the same live forecast you see here.</span>
               <button onClick={openVoice} aria-label="Tap to speak"
                 className="relative w-16 h-16 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-lg hover:scale-105 active:scale-95 transition-all my-1">
                 <span className="material-symbols-outlined text-[32px]">mic</span>
@@ -854,12 +924,12 @@ export default function WeatherRisk({ locationText = '' }) {
             ].map((q, i) => (
               <button key={i} onClick={() => openChatWith(q)}
                 className="w-full text-left p-2.5 rounded-xl bg-surface-container-lowest hover:bg-surface-container text-on-surface font-label-sm text-label-sm flex items-center justify-between gap-2 shadow-sm transition-colors">
-                <span className="truncate">“{q}”</span>
+                <span className="truncate">â€œ{q}â€</span>
                 <span className="material-symbols-outlined text-[18px] text-primary shrink-0">volume_up</span>
               </button>
             ))}
             <p className="font-label-sm text-[11px] text-on-surface-variant flex items-center gap-1 pt-1">
-              <span className="material-symbols-outlined text-[14px] text-primary">verified</span> Vetted with KVK protocol lines · 24×7
+              <span className="material-symbols-outlined text-[14px] text-primary">verified</span> Vetted with KVK protocol lines Â· 24Ã—7
             </p>
           </div>
         </div>
@@ -878,7 +948,7 @@ export default function WeatherRisk({ locationText = '' }) {
                 <span className="px-2.5 py-0.5 rounded-full bg-primary/10 text-primary font-label-sm text-[11px] font-semibold uppercase">{policyHealth}</span>
               </div>
               <p className="font-label-sm text-label-sm text-on-surface-variant">
-                {pol ? `${pol.policy_id}${pol.is_sample ? ' (sample)' : ''} · Sum insured ${inr(pol.sum_insured)} across ${pol.area_acres} acres · ${pol.crop}` : 'Policy feed offline — trigger meters paused.'}
+                {pol ? `${pol.policy_id}${pol.is_sample ? ' (sample)' : ''} Â· Sum insured ${inr(pol.sum_insured)} across ${pol.area_acres} acres Â· ${pol.crop}` : 'Policy feed offline â€” trigger meters paused.'}
               </p>
             </div>
           </div>
@@ -954,7 +1024,7 @@ export default function WeatherRisk({ locationText = '' }) {
           </div>
           <div>
             <h3 className="font-headline-md text-headline-md text-on-surface leading-tight">Raise Weather Damage Claim</h3>
-            <p className="font-label-sm text-label-sm text-on-surface-variant">{pol ? `${pol.policy_id}${pol.is_sample ? ' (sample)' : ''} · ${inr(pol.sum_insured)} insured` : 'PMFBY · AWS-Linked Parametric'}</p>
+            <p className="font-label-sm text-label-sm text-on-surface-variant">{pol ? `${pol.policy_id}${pol.is_sample ? ' (sample)' : ''} Â· ${inr(pol.sum_insured)} insured` : 'PMFBY Â· AWS-Linked Parametric'}</p>
           </div>
         </div>
 
@@ -1000,7 +1070,7 @@ export default function WeatherRisk({ locationText = '' }) {
             <button type="submit" disabled={claimSending}
               className="px-6 h-11 rounded-xl bg-tertiary text-on-tertiary font-label-lg hover:opacity-95 transition-opacity shadow-sm flex items-center gap-2 disabled:opacity-60">
               {claimSending && <span className="material-symbols-outlined animate-spin text-[18px]">progress_activity</span>}
-              {claimSending ? 'Filing…' : 'Submit Claim'}
+              {claimSending ? 'Filingâ€¦' : 'Submit Claim'}
             </button>
           </div>
         </form>
@@ -1014,16 +1084,16 @@ export default function WeatherRisk({ locationText = '' }) {
           </div>
           <div>
             <h3 className="font-headline-md text-headline-md text-on-surface leading-tight">Policy Ledger</h3>
-            <p className="font-label-sm text-label-sm text-on-surface-variant">{pol ? `${pol.policy_id}${pol.is_sample ? ' (sample)' : ''} · ${pol.insurer}` : 'PMFBY · AWS-Linked Parametric'}</p>
+            <p className="font-label-sm text-label-sm text-on-surface-variant">{pol ? `${pol.policy_id}${pol.is_sample ? ' (sample)' : ''} Â· ${pol.insurer}` : 'PMFBY Â· AWS-Linked Parametric'}</p>
           </div>
         </div>
 
         <div className="flex flex-col gap-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {[
-              ['Sum Insured', pol ? inr(pol.sum_insured) : '—'],
-              ['Insured Area', pol ? `${pol.area_acres} acres` : '—'],
-              ['Season', pol ? pol.season : '—'],
+              ['Sum Insured', pol ? inr(pol.sum_insured) : 'â€”'],
+              ['Insured Area', pol ? `${pol.area_acres} acres` : 'â€”'],
+              ['Season', pol ? pol.season : 'â€”'],
               ['Status', policyHealth],
             ].map(([k, v]) => (
               <div key={k} className="bg-surface p-3 rounded-xl border border-surface-variant">
@@ -1036,16 +1106,16 @@ export default function WeatherRisk({ locationText = '' }) {
           <div>
             <h4 className="font-label-lg text-label-lg text-on-surface font-semibold mb-2">Filed claims</h4>
             {claims.length === 0 ? (
-              <p className="text-on-surface-variant font-body-md text-body-md text-sm bg-surface rounded-xl p-4">No weather claims filed yet — triggers are evaluated live from the forecast.</p>
+              <p className="text-on-surface-variant font-body-md text-body-md text-sm bg-surface rounded-xl p-4">No weather claims filed yet â€” triggers are evaluated live from the forecast.</p>
             ) : (
               <div className="flex flex-col gap-2">
                 {claims.map(c => (
                   <div key={c.id} className="flex flex-col sm:flex-row sm:items-center gap-2 justify-between bg-surface rounded-xl p-3.5 border border-surface-variant">
                     <div className="min-w-0">
-                      <p className="font-label-lg text-label-lg text-on-surface font-semibold">{c.id} · {damageTypeMeta(c.damage_type).label || c.damage_type}</p>
+                      <p className="font-label-lg text-label-lg text-on-surface font-semibold">{c.id} Â· {damageTypeMeta(c.damage_type).label || c.damage_type}</p>
                       <p className="font-label-sm text-label-sm text-on-surface-variant truncate">
-                        {c.area_acres} acres · est. {inr(c.estimate?.estimate_amount ?? c.estimate_amount)} · {c.status} · {c.created_at ? new Date(c.created_at).toLocaleDateString('en-IN') : ''}
-                        {` · ${c.estimate?.basis || c.basis || ''}`}
+                        {c.area_acres} acres Â· est. {inr(c.estimate?.estimate_amount ?? c.estimate_amount)} Â· {c.status} Â· {c.created_at ? new Date(c.created_at).toLocaleDateString('en-IN') : ''}
+                        {` Â· ${c.estimate?.basis || c.basis || ''}`}
                       </p>
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
@@ -1069,8 +1139,8 @@ export default function WeatherRisk({ locationText = '' }) {
                     <span className="material-symbols-outlined text-[20px]">verified_user</span>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-label-lg text-label-lg text-on-surface font-semibold">{inr(p.amount)} <span className="text-on-surface-variant font-normal">· {p.label}</span></p>
-                    <p className="font-label-sm text-label-sm text-on-surface-variant">{p.reason} · {p.mode}</p>
+                    <p className="font-label-lg text-label-lg text-on-surface font-semibold">{inr(p.amount)} <span className="text-on-surface-variant font-normal">Â· {p.label}</span></p>
+                    <p className="font-label-sm text-label-sm text-on-surface-variant">{p.reason} Â· {p.mode}</p>
                   </div>
                 </div>
               ))}
@@ -1096,7 +1166,7 @@ export default function WeatherRisk({ locationText = '' }) {
             <label className="block font-label-sm text-label-sm text-on-surface mb-1.5 font-semibold">Choose a spray-window day from the live forecast</label>
             {dayChoices.length === 0 ? (
               <p className="text-on-surface-variant font-body-md text-body-md text-sm bg-surface rounded-xl p-3.5">
-                No safe window inside the next 48 hours — check back when the forecast clears.
+                No safe window inside the next 48 hours â€” check back when the forecast clears.
               </p>
             ) : (
               <div className="flex flex-col gap-2">
@@ -1104,8 +1174,8 @@ export default function WeatherRisk({ locationText = '' }) {
                   <label key={d.date} className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-colors ${reminderDay === d.date ? 'border-primary bg-primary/5' : 'border-surface-variant bg-surface hover:bg-surface-container-low'}`}>
                     <input type="radio" name="day" value={d.date} checked={reminderDay === d.date} onChange={() => setReminderDay(d.date)} className="accent-[#006948]" />
                     <span className="flex-1">
-                      <span className="block font-label-lg text-label-lg text-on-surface font-semibold">{d.dayLabel} — {d.w.label}</span>
-                      <span className="block font-label-sm text-label-sm text-on-surface-variant">{hasSafeWindow ? 'Best between' : 'Monitor — forecast may improve; we\'ll confirm before'} 06:30 AM – 10:30 AM · wind {Math.round(Number(d.wind_speed_10m_max) || 0)} km/h · rain {Math.round(Number(d.precipitation_probability_max) || 0)}%</span>
+                      <span className="block font-label-lg text-label-lg text-on-surface font-semibold">{d.dayLabel} â€” {d.w.label}</span>
+                      <span className="block font-label-sm text-label-sm text-on-surface-variant">{hasSafeWindow ? 'Best between' : 'Monitor â€” forecast may improve; we\'ll confirm before'} 06:30 AM â€“ 10:30 AM Â· wind {Math.round(Number(d.wind_speed_10m_max) || 0)} km/h Â· rain {Math.round(Number(d.precipitation_probability_max) || 0)}%</span>
                     </span>
                     {i === 0 && <span className={`px-2 py-0.5 rounded-full font-label-sm text-[11px] font-semibold ${hasSafeWindow ? 'bg-primary/10 text-primary' : 'bg-surface-container-high text-on-surface-variant'}`}>{hasSafeWindow ? 'Best' : 'Monitor'}</span>}
                   </label>
@@ -1137,7 +1207,7 @@ export default function WeatherRisk({ locationText = '' }) {
             <button type="submit" disabled={reminderSending || dayChoices.length === 0}
               className="px-6 h-11 rounded-xl bg-primary text-on-primary font-label-lg hover:bg-primary-container transition-colors shadow-sm flex items-center gap-2 disabled:opacity-60">
               {reminderSending && <span className="material-symbols-outlined animate-spin text-[18px]">progress_activity</span>}
-              {reminderSending ? 'Scheduling…' : `Schedule ${reminderKind.toUpperCase()} Reminder`}
+              {reminderSending ? 'Schedulingâ€¦' : `Schedule ${reminderKind.toUpperCase()} Reminder`}
             </button>
           </div>
         </form>

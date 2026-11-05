@@ -418,3 +418,108 @@ class ChatResponse(BaseModel):
 class ErrorResponse(BaseModel):
     error: str
     detail: Optional[str] = None
+
+
+# ===========================================================================
+# SEVA FIRST 2026 — Rural Panchayat Climate Resilience & Market Access System
+# New Pydantic Models for IoT, Cold Storage, Pooled Transport, Escrow, Gateways
+# ===========================================================================
+
+from typing import List as _List
+
+
+class IoTSensorData(BaseModel):
+    """Telemetry packet from a village IoT weather node. Must stay < 2 KB."""
+    node_id: str
+    village: str
+    panchayat: str
+    district: str
+    state: str
+    temperature_c: float
+    relative_humidity_pct: float
+    rain_mm_per_hour: float
+    wind_speed_kmh: float = 0.0
+    pm25_ug_m3: float = 0.0
+    soil_moisture_pct: float = 0.0
+    battery_voltage: float = 3.3
+
+
+class ColdStorageSearchRequest(BaseModel):
+    district: str = ""
+    state: str = ""
+    min_space_mt: float = 0.0
+
+
+class ColdStorageBookingRequest(BaseModel):
+    facility_id: int
+    farmer_name: str
+    phone: str
+    village: str
+    panchayat: str
+    crop: str
+    quantity_mt: float
+    duration_days: int
+
+
+class HarvestPledgeRequest(BaseModel):
+    farmer_name: str
+    phone: str
+    village: str
+    panchayat: str
+    district: str
+    state: str
+    crop: str
+    quantity_qt: float
+    harvest_date: str = ""
+    target_mandi: str = ""
+    lat: float = 20.0
+    lon: float = 76.0
+
+
+class TransportPoolRequest(BaseModel):
+    district: str
+    state: str
+    crop: str = ""
+
+
+class BuyerSearchRequest(BaseModel):
+    district: str = ""
+    state: str = ""
+    crop: str = ""
+
+
+class EscrowTradeRequest(BaseModel):
+    buyer_id: int
+    farmer_name: str
+    phone: str
+    village: str
+    panchayat: str
+    crop: str
+    quantity_qt: float
+    agreed_price_per_qt: float
+    pool_id: str = ""
+    notes: str = ""
+
+
+class EscrowStatusUpdate(BaseModel):
+    trade_id: str
+    new_status: str
+
+
+class WhatsAppWebhookPayload(BaseModel):
+    From: str = ""
+    Body: str = ""
+    lang: str = "en"
+
+
+class IVRVoiceRequest(BaseModel):
+    From: str = ""
+    Digits: str = ""
+    lang: str = "hi"
+
+
+class MandiArbitrageRequest(BaseModel):
+    state: str
+    crop: str
+    farmgate_price_per_qt: float
+    quantity_qt: float

@@ -42,20 +42,21 @@ async def lifespan(app: FastAPI):
 # App Instance
 # ---------------------------------------------------------------------------
 app = FastAPI(
-    title="AI Business Advisory Assistant",
+    title="Rural Panchayat Climate Resilience & Market Access System",
     description=(
-        "Multilingual AI-powered rural business feasibility platform. "
-        "Combines deterministic financial routing with LLM-generated market intelligence "
-        "grounded in real OpenStreetMap competitor data."
+        "SEVA FIRST Innovation Challenge 2026. "
+        "A zero-barrier, multilingual edge platform protecting smallholder farmers "
+        "from dual vulnerabilities: environmental hazards (heatwaves, unseasonal rain, stubble smoke) "
+        "and market blind spots (distress sales, cold storage capacity, pooled logistics)."
     ),
-    version="1.0.0",
+    version="2.0.0",
     lifespan=lifespan,
     docs_url="/docs",
     redoc_url="/redoc",
 )
 
 # ---------------------------------------------------------------------------
-# CORS — allow the React frontend on localhost during development
+# CORS â€” allow the React frontend on localhost during development
 # ---------------------------------------------------------------------------
 CORS_ORIGINS = [
     origin.strip()

@@ -1,11 +1,12 @@
 ====================================================================================================
-               FINGROW ADVISORY: COMPLETE SYSTEM ARCHITECTURE & ENGINEERING MANUAL
+ RURAL PANCHAYAT CLIMATE RESILIENCE & MARKET ACCESS SYSTEM: SYSTEM ARCHITECTURE & MANUAL
 ====================================================================================================
-Project Name    : FinGrow Advisory / Smart Business Advisory & Scheme Calculator
-Event / Origin  : Smart India Hackathon (SIH)
-Target Audience : Rural Micro-Entrepreneurs, Marginal Farmers, Self-Help Groups (SHGs), Co-operatives
-Documentation   : Full Features, Languages, Logics, Voice Assistant, APIs & Persistence Breakdown
-Generated Date  : September 2026
+Project Name    : Rural Panchayat Climate Resilience & Market Access System
+Event / Origin  : SEVA FIRST Innovation Challenge 2026 (sfic.co.in · mic.gov.in)
+Track / Theme   : Technology Solution / Samriddh Annadata (Prosperous Farmer)
+Target Audience : Gram Panchayats, Smallholder Farmers, Outdoor Farmworkers, & Rural Cooperatives / FPOs
+Documentation   : IoT Telemetry, Mandi Arbitrage, Cold Storage, Pooled Logistics, WhatsApp & Voice Gateways
+Target TRL      : Entry TRL 3 → Target TRL 6 (75-Day Village Pilot Roadmap)
 ====================================================================================================
 
 TABLE OF CONTENTS:
@@ -177,7 +178,7 @@ Within seconds, the platform executes a synchronized pipeline:
 - Frontend Files: frontend/src/components/SchemeCalculator.jsx, ScenarioCalculator.jsx
 - Backend Files : backend/app/core/calculator.py, backend/app/core/amortization.py
 - Key Capabilities:
-  * Real-time sliders allowing the user to adjust their Margin Capital from ₹5,000 to ₹5,00,000+.
+  * Real-time sliders allowing the user to adjust their Margin Capital from â‚¹5,000 to â‚¹5,00,000+.
   * Instant automatic categorization into either "Micro Finance Scheme" or "Term Loan Scheme".
   * Instant rendering of Total Project Cost, Sanctioned Bank Loan, Interest Rate, Tenure, and Moratorium.
   * "What-If" Scenario Simulator: Lets borrowers test what happens to their monthly obligations if the
@@ -266,7 +267,7 @@ Within seconds, the platform executes a synchronized pipeline:
   * Live Trigger Evaluation: Automatically tests 7-day forecasts against policy trigger thresholds:
     1. Excess Precipitation (> 65 mm in 24 hours).
     2. Prolonged Dry Spell / Drought (> 21 consecutive rainless days).
-    3. Thermal Inversion / Heat Wave (> 3 consecutive days above 41°C during flowering).
+    3. Thermal Inversion / Heat Wave (> 3 consecutive days above 41Â°C during flowering).
   * Trigger Statuses: Categorized into "SAFE", "WATCHLIST", or "TRIGGERED".
   * Direct Claim Submission: Farmers can file a claim specifying damage type and affected acreage.
   * Deterministic Payout Estimation: Pre-calculates exact DBT compensation based on policy sum insured.
@@ -280,7 +281,7 @@ Within seconds, the platform executes a synchronized pipeline:
 - Key Capabilities:
   * Daily Spray Classification: Flags each day as "Optimal Spray", "Good Window", "Marginal", or "Avoid Spray"
     based on precipitation probability, wind drift, and rainfall mm.
-  * Best Spray Window Recommendation: Recommends precise morning time slots (e.g., 06:30 AM – 10:30 AM).
+  * Best Spray Window Recommendation: Recommends precise morning time slots (e.g., 06:30 AM â€“ 10:30 AM).
   * Printable Protection Protocol Document: Generates and serves a formatted HTML protocol document ready to
     print or save as PDF.
   * Field Reminder Scheduler: Allows farmers to set SMS/Call/Push reminders for spray days, stored in SQLite.
@@ -338,7 +339,7 @@ Within seconds, the platform executes a synchronized pipeline:
 - Frontend Files: frontend/src/i18n.js, frontend/src/locales/en.json, hi.json, mr.json
 - Backend Files : backend/app/core/translator.py
 - Key Capabilities:
-  * In-browser instant language switching for UI elements between English, Marathi (मराठी), and Hindi (हिन्दी).
+  * In-browser instant language switching for UI elements between English, Marathi (à¤®à¤°à¤¾à¤ à¥€), and Hindi (à¤¹à¤¿à¤¨à¥à¤¦à¥€).
   * Persistent storage of language selection in localStorage.
   * Server-side dynamic translation for LLM reports supporting 11 languages:
     Hindi (hi), Marathi (mr), Bengali (bn), Telugu (te), Tamil (ta), Gujarati (gu),
@@ -361,7 +362,7 @@ entrepreneur is required to contribute a minimum equity stake of 10% (Margin Cap
 lender provides 90% debt financing.
 
 Mathematical Formulation:
-  Margin Capital (M) = Provided by user (₹)
+  Margin Capital (M) = Provided by user (â‚¹)
   Margin Percentage  = 10% (0.10)
   Debt Percentage    = 90% (0.90)
 
@@ -369,9 +370,9 @@ Mathematical Formulation:
   Bank Loan Amount   (L)      = P_cost * 0.90 = (M / 0.10) * 0.90 = M * 9.0
 
 Example:
-  User enters Margin Capital = ₹50,000
-  Total Project Cost = ₹50,000 / 0.10 = ₹5,00,000
-  Sanctioned Loan    = ₹5,00,000 * 0.90 = ₹4,50,000
+  User enters Margin Capital = â‚¹50,000
+  Total Project Cost = â‚¹50,000 / 0.10 = â‚¹5,00,000
+  Sanctioned Loan    = â‚¹5,00,000 * 0.90 = â‚¹4,50,000
 
 4.2 GOVERNMENT SCHEME ROUTING GATES & ELIGIBILITY BOUNDS
 --------------------------------------------------------
@@ -380,35 +381,35 @@ In `backend/app/core/calculator.py`, routing is completely deterministic:
   Condition 1: Margin Capital <= 0
     -> ACTION: REJECT with ValueError("Margin capital must be positive.")
 
-  Condition 2: Total Project Cost <= ₹1,40,000 (Margin Capital <= ₹14,000)
+  Condition 2: Total Project Cost <= â‚¹1,40,000 (Margin Capital <= â‚¹14,000)
     -> ROUTE TO: "Micro Finance Scheme"
     -> Annual Interest Rate : 6.50% p.a.
     -> Loan Tenure          : 36 Months (3 Years / 12 Quarters)
     -> Moratorium (Grace)   : 3 Months (1 Quarter)
     -> Repayment Unit       : Quarterly Reducing Balance
 
-  Condition 3: ₹1,40,000 < Total Project Cost <= ₹50,00,000 (₹14,000 < Margin <= ₹5,00,000)
+  Condition 3: â‚¹1,40,000 < Total Project Cost <= â‚¹50,00,000 (â‚¹14,000 < Margin <= â‚¹5,00,000)
     -> ROUTE TO: "Term Loan Scheme"
     -> Annual Interest Rate : 8.00% p.a. (Eligible for subvention down to 7.00%)
     -> Loan Tenure          : 84 Months (7 Years / 28 Quarters)
     -> Moratorium (Grace)   : 6 Months (2 Quarters)
     -> Repayment Unit       : Quarterly Reducing Balance
 
-  Condition 4: Total Project Cost > ₹50,00,000 (Margin Capital > ₹5,00,000)
-    -> ACTION: REJECT with SchemeError("Project cost exceeds maximum limit of ₹50,00,000.")
+  Condition 4: Total Project Cost > â‚¹50,00,000 (Margin Capital > â‚¹5,00,000)
+    -> ACTION: REJECT with SchemeError("Project cost exceeds maximum limit of â‚¹50,00,000.")
 
 4.3 MORATORIUM (GRACE PERIOD) MECHANICS
 ---------------------------------------
 Micro-enterprises (such as livestock, dairy, poultry, crops) require gestation time before generating revenue.
 During the Moratorium:
-- Principal Repayment = ₹0.00
+- Principal Repayment = â‚¹0.00
 - Borrower pays ONLY the accrued interest for that period.
 - Amortization begins strictly after the moratorium ends.
 
 4.4 REDUCING-BALANCE AMORTIZATION FORMULAS
 ------------------------------------------
 
-A) Quarterly Amortization (Report Engine — `amortization.py`):
+A) Quarterly Amortization (Report Engine â€” `amortization.py`):
    Total Quarters (Q_total) = Tenure Months / 3
    Moratorium Quarters (Q_mora) = Moratorium Months / 3
    Repayment Quarters (Q_repay) = Q_total - Q_mora
@@ -430,7 +431,7 @@ A) Quarterly Amortization (Report Engine — `amortization.py`):
        Closing Balance     = Opening Balance - Principal Component
        (On the final quarter, Principal Component absorbs any rounding delta to ensure Closing Balance = 0.00)
 
-B) Monthly Amortization (Loan Approval & Repayment Tracking — `loan_schedule.py`):
+B) Monthly Amortization (Loan Approval & Repayment Tracking â€” `loan_schedule.py`):
    Monthly Interest Rate:
      r_m = (Annual Interest Rate / 100) / 12
 
@@ -442,15 +443,15 @@ B) Monthly Amortization (Loan Approval & Repayment Tracking — `loan_schedule.p
 ------------------------------------------------------
 Under priority sector agricultural initiatives (e.g., Agriculture Infrastructure Fund - AIF):
   Subsidy Rate = 25% of Total Project Cost
-  Subsidy Cap  = ₹5,00,000 (Maximum Backend Credit)
+  Subsidy Cap  = â‚¹5,00,000 (Maximum Backend Credit)
 
   Subsidy Amount = MIN(Project Cost * 0.25, 500000)
 
-Example 1: Project Cost = ₹1,20,000
-  Subsidy = MIN(120000 * 0.25, 500000) = MIN(30000, 500000) = ₹30,000
+Example 1: Project Cost = â‚¹1,20,000
+  Subsidy = MIN(120000 * 0.25, 500000) = MIN(30000, 500000) = â‚¹30,000
 
-Example 2: Project Cost = ₹30,00,000
-  Subsidy = MIN(3000000 * 0.25, 500000) = MIN(750000, 500000) = ₹5,00,000 (Capped)
+Example 2: Project Cost = â‚¹30,00,000
+  Subsidy = MIN(3000000 * 0.25, 500000) = MIN(750000, 500000) = â‚¹5,00,000 (Capped)
 
 4.6 OPENSTREETMAP COMPETITOR DENSITY CLASSIFICATION ALGORITHM
 -------------------------------------------------------------
@@ -492,7 +493,7 @@ In `backend/app/core/weather.py`, risk scoring is rule-based:
       Add advisory: "Scout for pest & fungal pressure (bollworm, blight)."
 
   Rule 3 (Extreme Heat Stress):
-    If maximum temperature >= 38°C:
+    If maximum temperature >= 38Â°C:
       Score += 3
       Add advisory: "Heat-stress management; irrigate early morning/evening, shelter livestock."
 
@@ -555,12 +556,12 @@ For each daily forecast day:
 4.11 PARAMETRIC INSURANCE TRIGGER EVALUATION & PAYOUT ESTIMATION
 ----------------------------------------------------------------
 In `backend/app/core/agro.py`:
-- Sum Insured = ₹8,50,000 across 28.5 Acres (Base Policy: PMFBY-AIC-MHA-89218)
+- Sum Insured = â‚¹8,50,000 across 28.5 Acres (Base Policy: PMFBY-AIC-MHA-89218)
 - Payout Claim Factors:
   * Excess Rain (> 65 mm in 24h)     : 25% of Sum Insured
   * Hailstorm / High-Wind Damage     : 35% of Sum Insured
   * Prolonged Drought (> 21 dry days): 20% of Sum Insured
-  * Heat Wave (> 3 days > 41°C)      : 15% of Sum Insured
+  * Heat Wave (> 3 days > 41Â°C)      : 15% of Sum Insured
   * High-Wind Lodging                : 15% of Sum Insured
 
 - Pro-Rata Acreage Payout Formula:
@@ -569,7 +570,7 @@ In `backend/app/core/agro.py`:
 
   Example: Excess Rain on 14.25 Acres:
     Acre Fraction = 14.25 / 28.5 = 0.50
-    Estimated Payout = ₹8,50,000 * 0.25 * 0.50 = ₹1,06,250
+    Estimated Payout = â‚¹8,50,000 * 0.25 * 0.50 = â‚¹1,06,250
 
 4.12 FAIL-SAFE GEOCODING & INTERNAL INDIAN DISTRICT GAZETTEER FALLBACK
 ----------------------------------------------------------------------
@@ -605,7 +606,7 @@ and instant UI responsiveness.
   * `recognition.interimResults = true` (Displays live words as the farmer speaks)
   * `recognition.lang = 'en-IN'` (Configured for Indian English accents and Hinglish pronunciations)
 - Stream Resolution:
-  * Interim results are appended with an ellipsis ("…") to provide visual feedback.
+  * Interim results are appended with an ellipsis ("â€¦") to provide visual feedback.
   * Finalized transcripts are parsed by the intent routing engine.
 
 5.2 INTENT CLASSIFICATION, PATTERN MATCHING & "VOICE SURFING"
@@ -616,7 +617,7 @@ The user can navigate the entire application by voice without clicking a single 
    - User says: "Open scheme calculator" / "calculate loan"
      -> Calls `onNavigate('calculator')`
      -> Regex match: `\b(\d{4,})\b`
-     -> If user says "Open calculator with 100000", it automatically parses ₹1,00,000 and sets the slider!
+     -> If user says "Open calculator with 100000", it automatically parses â‚¹1,00,000 and sets the slider!
    - User says: "Show feasibility report" / "business plan"
      -> Calls `onNavigate('feasibility')`
    - User says: "Check my loan history" / "my active loans"

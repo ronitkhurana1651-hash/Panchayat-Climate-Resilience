@@ -1536,3 +1536,247 @@ async def chat_endpoint(req: ChatRequest) -> ChatResponse:
         logger.warning("Chat LLM unavailable (%s: %s); using offline replies.", type(e).__name__, e)
         return ChatResponse(**offline_chat_reply(req.message, req.language))
 
+
+
+# ===========================================================================
+# SEVA FIRST 2026 — New Routes: IoT, Cold Storage, Pooled Transport, Escrow,
+# Delivery Gateways, Mandi Arbitrage
+# ===========================================================================
+
+from app.core import iot_sensor as _iot
+from app.core import cold_storage as _cold
+from app.core import pooled_transport as _transport
+from app.core import buyer_escrow as _escrow
+from app.core import delivery_gateways as _gateways
+from app.api.models import (
+    IoTSensorData, ColdStorageSearchRequest, ColdStorageBookingRequest,
+    HarvestPledgeRequest, TransportPoolRequest, BuyerSearchRequest,
+    EscrowTradeRequest, EscrowStatusUpdate, WhatsAppWebhookPayload,
+    IVRVoiceRequest, MandiArbitrageRequest,
+)
+import os as _os
+
+_IOT_DB = _os.getenv("IOT_DB_PATH", "iot.db")
+_COLD_DB = _os.getenv("COLD_DB_PATH", "cold_storage.db")
+_TRANSPORT_DB = _os.getenv("TRANSPORT_DB_PATH", "transport.db")
+_ESCROW_DB = _os.getenv("ESCROW_DB_PATH", "escrow.db")
+
+
+# --- IoT Telemetry ---
+
+@router.post("/iot/telemetry", tags=["IoT & Micro-Climate"])
+async def ingest_iot_telemetry(data: IoTSensorData):
+    """
+    Ingest a village IoT ground sensor packet (< 2 KB).
+    Returns immediate farmworker health & open-yard rain assessment.
+    """
+    reading = _iot.SensorReading(
+        node_id=data.node_id, village=data.village, panchayat=data.panchayat,
+        district=data.district, state=data.state,
+        temperature_c=data.temperature_c, relative_humidity_pct=data.relative_humidity_pct,
+        rain_mm_per_hour=data.rain_mm_per_hour, wind_speed_kmh=data.wind_speed_kmh,
+        pm25_ug_m3=data.pm25_ug_m3, soil_moisture_pct=data.soil_moisture_pct,
+        battery_voltage=data.battery_voltage,
+    )
+    return _iot.ingest_telemetry(_IOT_DB, reading)
+
+
+@router.get("/iot/readings", tags=["IoT & Micro-Climate"])
+async def get_iot_readings(district: str, limit: int = 20):
+    """Retrieve latest IoT telemetry readings for a district."""
+    return {"readings": _iot.latest_readings(_IOT_DB, district, limit)}
+
+
+@router.get("/weather/microclimate", tags=["IoT & Micro-Climate"])
+async def get_microclimate(district: str, state: str = "", node_id: str = ""):
+    """
+    Combined micro-climate advisory: satellite (Open-Meteo) fused with
+    latest IoT ground sensor readings. Includes heatwave worker safety
+    and stubble smoke / open-yard rain alerts.
+    """
+    readings = _iot.latest_readings(_IOT_DB, district)
+    alerts = []
+    for r in readings:
+        reading_obj = _iot.SensorReading(
+            node_id=r.get("node_id", ""), village=r.get("village", ""),
+            panchayat=r.get("panchayat", ""), district=r.get("district", district),
+            state=r.get("state", state),
+            temperature_c=r.get("temperature_c", 30),
+            relative_humidity_pct=r.get("relative_humidity_pct", 60),
+            rain_mm_per_hour=r.get("rain_mm_per_hour", 0),
+            pm25_ug_m3=r.get("pm25_ug_m3", 0),
+        )
+        assessment = _iot.farmworker_health_alert(reading_obj)
+        if assessment.get("alerts"):
+            alerts.extend(assessment["alerts"])
+    return {
+        "district": district,
+        "state": state,
+        "sensor_readings": len(readings),
+        "active_alerts": alerts,
+        "highest_severity": (
+            "critical" if any(a["severity"] == "critical" for a in alerts)
+            else "warning" if any(a["severity"] == "warning" for a in alerts)
+            else "none"
+        ),
+    }
+
+
+# --- Cold Storage ---
+
+@router.post("/cold-storage/search", tags=["Cold Storage"])
+async def search_cold_storage(req: ColdStorageSearchRequest):
+    """Search available cold storage facilities near a district/state."""
+    facilities = _cold.search_facilities(_COLD_DB, req.district, req.state, req.min_space_mt)
+    return {"facilities": facilities, "count": len(facilities)}
+
+
+@router.post("/cold-storage/reserve", tags=["Cold Storage"])
+async def reserve_cold_storage(req: ColdStorageBookingRequest):
+    """Reserve cold storage space. Returns SMS-ready confirmation token."""
+    try:
+        result = _cold.reserve_space(
+            _COLD_DB, req.facility_id, req.farmer_name, req.phone,
+            req.village, req.panchayat, req.crop, req.quantity_mt, req.duration_days
+        )
+        return result
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+# --- Pooled Transport ---
+
+@router.post("/logistics/pledge", tags=["Pooled Transport"])
+async def add_harvest_pledge(req: HarvestPledgeRequest):
+    """Register a smallholder harvest pledge into the pooled transport queue."""
+    result = _transport.add_pledge(
+        _TRANSPORT_DB, req.farmer_name, req.phone, req.village,
+        req.panchayat, req.district, req.state, req.crop,
+        req.quantity_qt, req.harvest_date, req.target_mandi, req.lat, req.lon
+    )
+    return result
+
+
+@router.post("/logistics/pools", tags=["Pooled Transport"])
+async def get_transport_pools(req: TransportPoolRequest):
+    """
+    Cluster pending harvest pledges using K-means geographic grouping.
+    Returns optimised truck pools and 30% freight savings calculation.
+    """
+    return _transport.compute_pool_clusters(_TRANSPORT_DB, req.district, req.state, req.crop)
+
+
+@router.post("/mandi/arbitrage", tags=["Mandi Price Discovery"])
+async def mandi_price_arbitrage(req: MandiArbitrageRequest):
+    """
+    Compute net income gain from bypassing local middleman and
+    pooling a truck to the regional APMC mandi.
+    Shows the core problem: Rs.12/kg farmgate vs Rs.20/kg regional market.
+    """
+    region_data = _transport.REGIONAL_MANDIS.get(req.state, {
+        "local": "Local Trader", "regional": "Regional APMC", "distance_km": 50
+    })
+    # Simulate a pool of 5 farmers (minimum for route optimisation)
+    sample_pledges = [{"quantity_qt": req.quantity_qt, "lat": 20.0, "lon": 76.0}] * 5
+    savings = _transport.compute_savings(req.state, sample_pledges)
+
+    # What farmer earns selling locally at farmgate price
+    farmgate_total = req.farmgate_price_per_qt * req.quantity_qt
+    # What farmer earns at regional mandi (assume 15% premium based on problem statement)
+    regional_price_est = req.farmgate_price_per_qt * 1.40  # ~40% higher per problem scenario
+    regional_total = regional_price_est * req.quantity_qt
+    freight_per_farmer = savings.get("pooled_per_farmer_inr", 0)
+    net_gain = regional_total - farmgate_total - freight_per_farmer
+
+    return {
+        "crop": req.crop,
+        "quantity_qt": req.quantity_qt,
+        "state": req.state,
+        "farmgate_scenario": {
+            "buyer": region_data["local"],
+            "price_per_qt": req.farmgate_price_per_qt,
+            "total_inr": round(farmgate_total, 2),
+            "freight_cost_inr": 0,
+            "net_income_inr": round(farmgate_total, 2),
+        },
+        "pooled_mandi_scenario": {
+            "buyer": region_data["regional"],
+            "est_price_per_qt": round(regional_price_est, 2),
+            "total_inr": round(regional_total, 2),
+            "freight_cost_inr": round(freight_per_farmer, 2),
+            "net_income_inr": round(net_gain, 2),
+        },
+        "income_gain_inr": round(net_gain, 2),
+        "income_gain_pct": round((net_gain / farmgate_total) * 100, 1) if farmgate_total else 0,
+        "freight_savings_pct": savings.get("freight_savings_pct", 0),
+        "vehicle": savings.get("vehicle", "Mini Truck"),
+    }
+
+
+# --- Verified Buyers & Escrow ---
+
+@router.post("/buyers/search", tags=["Direct Buyer & Escrow"])
+async def search_buyers(req: BuyerSearchRequest):
+    """List verified wholesale buyers for a region/crop combination."""
+    buyers = _escrow.list_buyers(_ESCROW_DB, req.district, req.state, req.crop)
+    return {"buyers": buyers, "count": len(buyers)}
+
+
+@router.post("/escrow/trade", tags=["Direct Buyer & Escrow"])
+async def create_escrow_trade(req: EscrowTradeRequest):
+    """Initiate a direct escrow trade order between farmer and verified buyer."""
+    try:
+        return _escrow.create_trade(
+            _ESCROW_DB, req.buyer_id, req.farmer_name, req.phone,
+            req.village, req.panchayat, req.crop, req.quantity_qt,
+            req.agreed_price_per_qt, req.pool_id, req.notes
+        )
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@router.post("/escrow/advance", tags=["Direct Buyer & Escrow"])
+async def advance_escrow(req: EscrowStatusUpdate):
+    """Advance escrow trade through lifecycle: pending→funded→dispatched→released."""
+    try:
+        return _escrow.advance_trade_status(_ESCROW_DB, req.trade_id, req.new_status)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+# --- Delivery Gateways ---
+
+@router.post("/gateways/whatsapp", tags=["Delivery Gateways"])
+async def whatsapp_webhook(payload: WhatsAppWebhookPayload):
+    """
+    WhatsApp Business API webhook endpoint.
+    Routes farmer queries via zero-barrier menu (no smartphone app needed).
+    Compatible with Twilio / Meta Cloud API.
+    """
+    context: dict = {}
+    # In production: hydrate context with live weather, mandi, cold-storage data
+    out = _gateways.handle_whatsapp_webhook(payload.dict(), context)
+    return {"reply": out.body, "channel": out.channel, "priority": out.priority}
+
+
+@router.post("/gateways/ivr", tags=["Delivery Gateways"])
+async def ivr_handler(payload: IVRVoiceRequest):
+    """
+    IVR voice telephony handler for feature phone / PSTN callers.
+    Returns TwiML-compatible dict for voice synthesis.
+    """
+    context: dict = {}
+    response = _gateways.handle_ivr_request(payload.dict(), context)
+    return response
+
+
+@router.get("/gateways/sms-test", tags=["Delivery Gateways"])
+async def sms_test_format(alert_type: str = "weather", district: str = "Nashik"):
+    """Test SMS alert formatting for < 160-character segments."""
+    sample_data = {
+        "weather": {"village": district, "heat_index_c": 41.2, "rain_mm_per_hour": 3.5},
+        "mandi": {"crop": "Onion", "price": 2200, "mandi": "Lasalgaon APMC"},
+        "cold_storage": {"name": "Lasalgaon Chamber", "available_mt": 60, "contact": "+91-9876500003"},
+    }
+    msg = _gateways.format_sms_alert(alert_type, sample_data.get(alert_type, {}))
+    return {"sms_text": msg, "char_count": len(msg), "fits_one_sms": len(msg) <= 160}

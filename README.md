@@ -1,66 +1,81 @@
 <div align="center">
 
-# 🌾 FinGrow Advisory
+# 🌾 Rural Panchayat Climate Resilience & Market Access System
 
-### AI business advisory & smart loan scheme platform for rural Indian entrepreneurs
+### SEVA FIRST Innovation Challenge 2026 — Sewa Sankalp Abhiyan (AICTE / MoE / DTU)
 
-**Location + capital + business idea → a bank-ready feasibility report, in the user's own language, in seconds.**
+**A zero-barrier, multilingual platform that protects smallholder farmers from two simultaneous attacks: unpredictable climate hazards and exploitative market blind spots.**
 
 ![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)
 ![React](https://img.shields.io/badge/React-19-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
-![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
+![IoT](https://img.shields.io/badge/IoT-MQTT-FF6B35?style=for-the-badge&logo=mqtt&logoColor=white)
+![WhatsApp](https://img.shields.io/badge/WhatsApp-Bot-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)
 ![SQLite](https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white)
-![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
-![Tests](https://img.shields.io/badge/tests-131_pytest-brightgreen?style=for-the-badge&logo=pytest&logoColor=white)
+![Tests](https://img.shields.io/badge/tests-155_pytest-brightgreen?style=for-the-badge&logo=pytest&logoColor=white)
 
-🏆 **Built for Smart India Hackathon (SIH)**
+🏆 **Built for SEVA FIRST Innovation Challenge 2026 (sfic.co.in · mic.gov.in)**  
+**Track:** Technology Solution | **Theme:** Samriddh Annadata (Prosperous Farmer)
 
-[Problem](#-the-problem) · [Features](#-features) · [Architecture](#-architecture) · [Getting started](#-getting-started) · [API](#-api-reference) · [Testing](#-testing) · [Contact](#-author)
+[Problem](#-the-dual-vulnerability-problem) · [Solution](#-the-solution) · [Architecture](#-architecture) · [Regions](#-target-regions) · [Getting Started](#-getting-started) · [API](#-api-reference) · [75-Day Plan](#-75-day-work-plan)
 
 </div>
 
 ---
 
-## 🎯 The problem
+## 🎯 The Dual Vulnerability Problem
 
-Prospective rural micro-entrepreneurs and marginal farmers in India face real barriers to starting a business:
+Small farmers in rural India are squeezed from **two sides at once**:
 
-1. **Complex lending schemes** — concessional government loan programmes are hard to navigate
-2. **Market blind spots** — no easy way to know if a business is already saturated locally
-3. **Language barriers** — banking guidelines are predominantly in English
-4. **Climate risk** — crops and livelihoods are exposed to weather shocks and pests
-5. **Digital literacy** — keyboard-heavy portals exclude many users
+### 1. Weather & Health Hazards (Pre-Harvest)
+Farmers and outdoor farmworkers get blindsided by sudden unseasonal rain, extreme heatwaves, and thick crop-residue smoke — with no hyper-local warnings in time:
+- **April–May** wheat harvesting: Heatwaves cause acute heatstroke risk for harvest crews and grain shrinkage.
+- **October–November** paddy-to-wheat transition: Thick smog from stubble burning blankets villages, creating severe respiratory hazards.
+- **Unseasonal Mavtha rains** in Nashik/Lasalgaon: Harvested onions drying in open panchayat threshing floors get soaked and rot within days.
 
-## 💡 The solution
+### 2. Market Blindness (Post-Harvest)
+Once crops are harvested, smallholders operate completely in the dark:
+- **No real-time mandi prices:** A local trader offers ₹12/kg when the town mandi 40 km away pays ₹20/kg.
+- **No cold storage visibility:** In Agra (potato) or Nalanda, facilities fill up unexpectedly and farmers dump crops at rock-bottom rates before they rot.
+- **No pooled logistics:** A farmer with only 10–15 quintals cannot justify the fuel cost of hiring an entire truck alone.
 
-A user provides just **three inputs** — **location**, **available margin capital (₹)** and **business category** (dairy, grocery, poultry, tailoring…). FinGrow then:
-
-- 📍 **Scans real local competitors** within a 5–10 km radius using OpenStreetMap
-- 🧮 **Structures a concessional loan** with a deterministic rules engine — no AI in the money math
-- 🧠 **Generates a grounded SWOT analysis** with an LLM that is fed only real data
-- 🌐 **Translates the advisory** into Hindi or Marathi
-- 📄 **Produces a downloadable, bank-ready PDF** with a full amortization schedule
-- 🎙️ **Lets users drive the whole app by voice** through a bilingual assistant
+### The Result
+> Smallholders lose up to **30% of their hard-earned income** through distress sales to middlemen who exploit these exact information blind spots.
 
 ---
 
-## ✨ Features
+## 💡 The Solution
 
-| Module | What it does |
-|---|---|
-| **Feasibility wizard** | 3-step onboarding that produces a full feasibility report with financials, competitor survey and SWOT |
-| **Scheme calculator** | Instant, offline-capable loan structuring with a capital slider and scenario comparison |
-| **Loan lifecycle** | Apply → officer approval (with term overrides) → EMI schedule → in-order repayment tracking → CSV statement |
-| **Weather & crop risk** | Live Open-Meteo forecast, 0–10 crop-risk score, spray windows, pest outlook and printable spray protocol |
-| **Parametric insurance** | Trigger meters (excess rain / dry spell / heat) evaluated against the forecast, plus claim filing with payout estimates |
-| **Farm dashboard** | Harvest lots and revenue, loan portfolio and cash-flow, co-op activity feed, notifications built from real state |
-| **Market & suppliers** | Mandi commodity price board and an OSM-powered nearby supplier map |
-| **Voice & chat agent** | Floating assistant using the Web Speech API + LLM chat with intent detection that navigates the app |
-| **Multilingual UI** | English, हिन्दी and मराठी via i18next, with jargon tooltips for financial terms |
-| **Share & export** | ReportLab vector PDF reports and WhatsApp sharing |
-| **PWA** | Installable with offline caching for low-connectivity areas |
+A **lightweight, multilingual platform** accessible via **WhatsApp, SMS, IVR voice calls, and a low-bandwidth Panchayat kiosk** — designed for patchy `< 2G` village networks with **zero app download** required.
+
+| Module | What it does | Delivery Channel |
+|---|---|---|
+| 🌡️ **Micro-Climate & Worker Safety** | Ground IoT sensor telemetry fused with satellite data; heatwave crew alerts; stubble smoke & open drying yard rain warnings | Voice / SMS Push |
+| 📊 **Live Mandi Price Discovery** | Real-time APMC prices via Agmarknet; farmgate vs. regional mandi price arbitrage calculator | WhatsApp Bot |
+| ❄️ **Cold Storage Locker Hub** | Live available capacity telemetry across pilot belt facilities; SMS-confirmed booking tokens | Light Web / SMS |
+| 🚚 **Pooled Village Transport** | K-means clustering of smallholder harvest pledges into shared trucks; 30% freight savings | Panchayat Kiosk |
+| 🤝 **Verified Wholesale Escrow** | Direct B2B buyer registry; escrow-backed trade settlements to bypass middlemen | WhatsApp / Web |
+| 📱 **Zero-Barrier Delivery** | WhatsApp bot + IVR voice telephony + SMS push; `< 2G` resilient async queue (up to 5000ms dropout tolerance) | All Channels |
+
+---
+
+## 🗺️ Target Regions (4 Agricultural Belts)
+
+### 1. The Indo-Gangetic Plains (Punjab, Haryana, Western UP, Bihar)
+- **Hazards:** Stubble smoke October–November; intense heatwaves during April–May wheat harvest; potato cold-storage bottlenecks (Agra UP, Nalanda Bihar).
+- **Pilot clusters:** Agra, Nalanda, Ambala.
+
+### 2. Maharashtra Horticulture Belt (Nashik, Pune, Marathwada)
+- **Hazards:** Mavtha (unseasonal winter/spring) rain and hailstorms ruining drying onions; wild APMC mandi price swings at Lasalgaon.
+- **Pilot clusters:** Nashik, Lasalgaon APMC, Niphad.
+
+### 3. Central India Pulse & Soybean Belt (Madhya Pradesh, Rajasthan)
+- **Hazards:** Harvest-time rain discolors soybeans, mustard, and chickpeas (chana); middleman dependence due to distant regional mandis.
+- **Pilot clusters:** Indore (Malwa), Bundelkhand, Jaipur.
+
+### 4. Eastern & Southern Vegetable Clusters (Karnataka, Andhra Pradesh, West Bengal)
+- **Hazards:** Tomatoes and leafy greens with shelf-life measured in hours; lack of real-time buyer demand tracking forces roadside dumping.
+- **Pilot clusters:** Kolar (Karnataka), Madanapalle (Andhra Pradesh).
 
 ---
 
@@ -68,66 +83,77 @@ A user provides just **three inputs** — **location**, **available margin capit
 
 ```mermaid
 flowchart TB
-    UI["⚛️ React 19 + Vite PWA<br/>i18next · Recharts · GSAP · Web Speech API"]
-    API["⚡ FastAPI backend<br/>Pydantic models · REST"]
-    FIN["🧮 Deterministic finance engine<br/>calculator · amortization · loan schedule"]
-    INTEL["🗺️ Market intelligence<br/>Nominatim geocoding · Overpass API"]
-    AI["🧠 LLM layer — Groq<br/>bounded SWOT advisory · chat agent"]
-    TR["🌐 Translation<br/>Bhashini → MyMemory fallback"]
-    WX["🌦️ Agro-climate<br/>Open-Meteo · risk rules · insurance triggers"]
-    DB[("🗄️ SQLite<br/>sessions · loans · harvest · advisory")]
-    PDF["📄 ReportLab PDF"]
+    FARMER["👨‍🌾 Smallholder Farmer\nBasic feature phone / WhatsApp"]
+    PANCHAYAT["🏛️ Gram Panchayat Kiosk\nShared low-bandwidth terminal"]
 
-    UI -->|HTTP JSON| API
-    API --> FIN
-    API --> INTEL
-    API --> AI
-    API --> TR
-    API --> WX
-    API --> DB
-    API --> PDF
+    WA["📱 WhatsApp Bot\nMeta / Twilio Cloud API"]
+    IVR["📞 IVR Voice Telephony\nPSTN / Cellular multilingual"]
+    SMS["📨 SMS Push Alerts\n< 160 chars, < 2G resilient"]
+    WEB["🌐 Lightweight Web Kiosk\nPWA offline-first"]
+
+    ASYNC["⚡ Async Message Queue\n5000ms dropout tolerance"]
+
+    IOT["🛰️ IoT Sensor Hubs\nMQTT < 2KB packets\nTemp / RH / Rain / PM2.5"]
+    SAT["🌍 Satellite + IMD\nOpen-Meteo API feed"]
+
+    ENGINE["🧠 Processing Engine\nFastAPI (Python 3.10+)"]
+
+    MICRO["🌡️ Micro-Climate Module\nHeat index / Smoke / Flash rain"]
+    MANDI["📊 Mandi Price Discovery\nAgmarknet / data.gov.in API"]
+    COLD["❄️ Cold Storage Tracker\nLive capacity + SMS booking"]
+    POOL["🚚 Pooled Transport\nK-means cluster + freight optimizer"]
+    ESCROW["🤝 Buyer Escrow\nVerified buyers + payment lifecycle"]
+
+    DB[("🗄️ SQLite\nIoT · Storage · Pledges · Escrow")]
+
+    FARMER --> WA & IVR & SMS
+    PANCHAYAT --> WEB
+    WA & IVR & SMS & WEB --> ASYNC --> ENGINE
+    IOT --> ENGINE
+    SAT --> ENGINE
+    ENGINE --> MICRO & MANDI & COLD & POOL & ESCROW
+    ENGINE --> DB
 ```
-
-### 🔐 Design principle: no hallucinated money
-
-Financial structuring is **never delegated to an LLM**. All loan math lives in rule-based, fully tested Python:
-
-| Rule | Formula / gate |
-|---|---|
-| Project cost | `Margin capital ÷ 0.10` |
-| Loan amount | `Project cost × 0.90` |
-| Micro Finance Scheme | Project cost ≤ ₹1,40,000 → 6.5% p.a., 36 months, 3-month moratorium |
-| Term Loan Scheme | ₹1,40,000 < project cost ≤ ₹50,00,000 → 8.0% p.a., 84 months, 6-month moratorium |
-| Out of bounds | Project cost > ₹50,00,000 → rejected |
-| Repayment | Reducing-balance amortization, interest-only during moratorium |
-
-The LLM receives **real competitor density and computed financials as ground truth**, and its system prompt explicitly forbids inventing demographics or market statistics. When an external service is unavailable, the app degrades gracefully instead of failing.
 
 ---
 
-## 🛠 Tech stack
+## 🔬 Technical Specifications
+
+| Component | Technical Implementation | Impact Target |
+|---|---|---|
+| **IoT Sensor Node** | MQTT-based protocol, payloads kept `< 2 KB`; NEMA-rated weather-proof enclosure | ₹1,500/unit edge hardware node |
+| **Micro-Climate Advisory** | Satellite data + ground sensor telemetry pushed via Voice/SMS | Reduce heatstroke & crop loss |
+| **Mandi Price Discovery** | Real-time Agmarknet feed integration with price arbitrage calculator | Eliminate middleman distortion |
+| **Cold Storage Tracking** | Live capacity telemetry & SMS-based booking reservation | Prevent post-harvest decay |
+| **Pooled Transport** | K-means geographic clustering matching farm outputs with available truck tonnages | Direct 30% freight cost reduction |
+| **Low-Bandwidth Adaptation** | Asynchronous Protocol Synchronization tolerating dropouts up to 5,000 ms | `< 2G` rural network resilience |
+| **Direct Buyer Escrow** | Registry of verified wholesale buyers with escrow-backed trade settlements | Guarantee fair payment |
+
+---
+
+## 🛠 Tech Stack
 
 | Layer | Technology |
 |---|---|
 | **Frontend** | React 19, Vite, Tailwind CSS v4, Recharts, GSAP, react-i18next, vite-plugin-pwa |
 | **Backend** | Python 3.10+, FastAPI, Uvicorn, Pydantic v2, httpx |
-| **AI / NLP** | Groq (`openai/gpt-oss-120b` advisory, Llama 3.x chat), Bhashini + MyMemory translation |
-| **Geo & data** | OpenStreetMap Nominatim + Overpass, Open-Meteo |
-| **Persistence** | SQLite |
-| **Reports** | ReportLab (vector PDF), SVG charts |
-| **Testing** | pytest, pytest-asyncio — 131 tests |
-| **DevOps** | Docker, Docker Compose (health-checked services), Nginx, Vercel config |
+| **IoT / Edge** | MQTT-compatible HTTP telemetry ingestion, `< 2 KB` packet schema |
+| **AI / NLP** | Groq LLM advisory, Bhashini + MyMemory regional translation (11 Indian languages) |
+| **Delivery Gateways** | WhatsApp Business API (Twilio/Meta), Twilio IVR (TwiML), SMS plain-text push |
+| **Geo & Data** | OpenStreetMap Nominatim + Overpass, Open-Meteo, Agmarknet (`data.gov.in`) |
+| **Persistence** | SQLite (`iot.db`, `cold_storage.db`, `transport.db`, `escrow.db`, `session.db`) |
+| **Testing** | pytest & pytest-asyncio — comprehensive unit and integration test suite |
 
 ---
 
-## 🚀 Getting started
+## 🚀 Getting Started
 
 ### Option 1 — Docker Compose (recommended)
 
 ```bash
 git clone https://github.com/tan8696/Fingrow-.git
 cd Fingrow-
-cp backend/.env.example backend/.env   # add your GROQ_API_KEY
+cp backend/.env.example backend/.env
 docker compose up --build
 ```
 
@@ -136,15 +162,13 @@ docker compose up --build
 
 ### Option 2 — Run locally
 
-**Prerequisites:** Python 3.10+, Node.js 18+
-
 **Backend**
 ```bash
 cd backend
 python -m venv venv
-source venv/bin/activate          # Windows: venv\Scripts\activate
+source venv/Scripts/activate      # Windows: venv\Scripts\activate
 pip install -r requirements.txt
-cp .env.example .env              # add your GROQ_API_KEY
+cp .env.example .env
 uvicorn app.main:app --reload --port 8000
 ```
 
@@ -155,146 +179,63 @@ npm install
 npm run dev                       # http://localhost:5173
 ```
 
-### Environment variables
+---
 
-| Variable | Required | Purpose |
+## 📡 API Reference
+
+### Core Agricultural Platform Endpoints
+
+| Area | Endpoint | Description |
 |---|---|---|
-| `GROQ_API_KEY` | For AI reports & chat | Groq API key |
-| `GROQ_MODEL` | No | Advisory model (default `openai/gpt-oss-120b`) |
-| `BHASHINI_API_KEY` / `BHASHINI_USER_ID` | No | Primary translation provider; falls back to MyMemory |
-| `CORS_ORIGINS` | No | Comma-separated allowed frontend origins |
-| `SESSION_DB_PATH`, `LOANS_DB_PATH`, `HARVEST_DB_PATH`, `ADVISORY_DB_PATH` | No | SQLite file locations |
-
-> 💡 The standalone calculator (`POST /api/calculate`) needs **no API keys** at all.
+| **IoT & Micro-Climate** | `POST /api/iot/telemetry` | Ingest IoT node packet (`< 2 KB`); returns immediate health alert |
+| **IoT & Micro-Climate** | `GET /api/iot/readings?district=` | Retrieve latest IoT readings for a district |
+| **IoT & Micro-Climate** | `GET /api/weather/microclimate?district=` | Fused satellite + ground IoT micro-climate advisory |
+| **Cold Storage** | `POST /api/cold-storage/search` | Search available cold storage facilities near district/state |
+| **Cold Storage** | `POST /api/cold-storage/reserve` | Reserve cold storage locker with SMS booking token |
+| **Pooled Transport** | `POST /api/logistics/pledge` | Register smallholder harvest pledge into pooling queue |
+| **Pooled Transport** | `POST /api/logistics/pools` | K-means cluster grouping and 30% freight savings calculation |
+| **Mandi Arbitrage** | `POST /api/mandi/arbitrage` | Farmgate vs. regional APMC net income comparison |
+| **Buyer Escrow** | `POST /api/buyers/search` | Search verified wholesale B2B buyers |
+| **Buyer Escrow** | `POST /api/escrow/trade` | Initiate direct escrow trade order |
+| **Buyer Escrow** | `POST /api/escrow/advance` | Advance trade through lifecycle (`pending` → `funded` → `released`) |
+| **Delivery Gateways** | `POST /api/gateways/whatsapp` | WhatsApp bot webhook handler (Twilio/Meta compatible) |
+| **Delivery Gateways** | `POST /api/gateways/ivr` | IVR voice telephony request handler (TwiML) |
+| **Delivery Gateways** | `GET /api/gateways/sms-test` | Test plain-text SMS `< 160-character` alert formatting |
 
 ---
 
-## 📡 API reference
+## 📅 75-Day Work Plan & Milestone Schedule
 
-Full interactive docs are served at `/docs`. Highlights:
+| Phase | Duration | Scope & Milestones |
+|---|---|---|
+| **Phase 1: Requirements & Architecture** | **Days 1–15** | Finalize multilingual voice/SMS workflow architecture; partner with local FPOs/village panchayats; map regional mandi and cold-storage data sources. |
+| **Phase 2: Platform Development** | **Days 16–40** | Assemble IoT micro-climate sensor nodes; build lightweight web, WhatsApp bot, and voice-call IVR interface; integrate micro-climate feeds and mandi price dashboards. |
+| **Phase 3: Field Testing & User Trials** | **Days 41–60** | Deploy prototype within pilot village cluster; run live user trials with farmers and local cooperatives; refine voice/SMS accessibility based on feedback. |
+| **Phase 4: Evaluation & Scaling Setup** | **Days 61–75** | Measure pilot impact on post-harvest savings; finalize documentation; prepare rollout roadmap for neighbouring panchayats. |
 
-| Area | Endpoints |
+**Entry TRL:** TRL 3 (Analytical and experimental proof of concept demonstrated)  
+**Target TRL:** TRL 6 (Fully functional kiosk and sensor hub live in pilot village)
+
+---
+
+## 👥 Team Composition & Roles
+
+| Member Role | Focus & Responsibilities |
 |---|---|
-| **Reference** | `GET /api/health` · `GET /api/categories` · `GET /api/languages` |
-| **Calculator** | `POST /api/calculate` |
-| **Feasibility** | `POST /api/generate-report` · `GET /api/report/{session_id}/pdf` |
-| **Loans** | `POST /api/loans/apply` · `POST /api/loans/{id}/approve` · `GET /api/loans/{id}/repayment` · `POST /api/loans/{id}/repayments/{month}` · `GET /api/loans/{id}/statement` · `GET /api/loan-history` |
-| **Weather & insurance** | `GET /api/weather` · `GET /api/weather/protocol` · `GET /api/insurance/policy` · `POST/DELETE /api/insurance/claims` · `GET/POST/DELETE /api/reminders` |
-| **Dashboard** | `GET/POST/DELETE /api/harvest` · `GET /api/portfolio` · `GET /api/portfolio/cashflow` · `GET /api/cluster/activity` · `GET /api/notifications` · `GET /api/market-prices` |
-| **Assistant** | `POST /api/chat` |
-
-<details>
-<summary><b>Example — <code>POST /api/calculate</code></b></summary>
-
-**Request**
-```json
-{ "margin_capital": 25000 }
-```
-
-**Response (abridged)**
-```json
-{
-  "financials": {
-    "margin_contribution": 25000.0,
-    "project_cost": 250000.0,
-    "loan_amount": 225000.0,
-    "selected_scheme": "Term Loan Scheme",
-    "interest_rate_pct": 8.0,
-    "tenure_months": 84,
-    "moratorium_months": 6
-  },
-  "amortization": {
-    "quarterly_emi": 11155.0,
-    "total_quarters": 28,
-    "schedule": ["..."]
-  }
-}
-```
-</details>
-
-<details>
-<summary><b>Example — <code>POST /api/generate-report</code></b></summary>
-
-```json
-{
-  "location": "Rampur Village, Barabanki, UP",
-  "margin_capital": 25000,
-  "business_category": "dairy",
-  "language": "hi",
-  "radius_km": 10.0
-}
-```
-Returns financials, the amortization schedule, an OSM competitor survey and a translated SWOT analysis.
-</details>
+| **Project Lead / Strategy** | Oversees overall project execution, panchayat partnerships, and stakeholder alignment. |
+| **Full-Stack & Mobile Developer** | Builds lightweight web platform, WhatsApp bot integration, and low-bandwidth UI. |
+| **AI / Voice Integration Engineer** | Handles speech-to-text, multi-language translation, and IVR/SMS voice pipelines. |
+| **Field Outreach & Testing Lead** | Manages on-ground user trials, farmer training, and feedback collection within rural clusters. |
 
 ---
 
-## 🧪 Testing
+## 💰 Prototype Cost & Economic Viability
 
-**131 automated tests** cover the parts of the system where correctness matters most:
-
-| Suite | Coverage |
+| Component | Estimated Cost |
 |---|---|
-| `test_calculator.py` | Scheme thresholds and boundaries, 10× project cost, 90% loan, ₹50L cap |
-| `test_amortization.py` | Moratorium schedules, reducing-balance math, zero final balance |
-| `test_loan_store.py` · `test_loan_schedule.py` | Persistence, monthly EMI math, CSV statements |
-| `test_api.py` | Apply → approve → repay flow, conflict handling, insurance, reminders, notifications (weather feed stubbed) |
-| `test_weather.py` · `test_agro.py` | WMO code mapping, crop-risk rules, spray windows, insurance triggers, payout math |
-| `test_harvest_store.py` · `test_portfolio.py` | Harvest revenue summaries and portfolio aggregation |
-| `test_session_store.py` · `test_report.py` | SQLite session durability, SVG charts, PDF generation |
+| Edge Hardware Node (IoT sensor suite + microcontroller) | ₹1,500 per unit |
+| WhatsApp Business API & IVR Gateway subscriptions | ~₹0.12 per advisory push |
+| Minimal Cloud Hosting | ₹2,000 / month |
+| **Total Prototype Pilot (1 Panchayat cluster)** | **~₹50,000** |
 
-```bash
-cd backend
-python -m pytest tests -v
-```
-
----
-
-## 📁 Project structure
-
-```
-Fingrow-/
-├── backend/
-│   ├── app/
-│   │   ├── api/          # FastAPI routes & Pydantic models
-│   │   ├── core/         # Finance engine, geo, weather, agro, LLM, translation, stores
-│   │   └── report/       # HTML/SVG + ReportLab PDF generation
-│   ├── agent/skills/     # Agent skill modules (scheme financials, OSM, voice stream)
-│   ├── tests/            # pytest suite
-│   └── Dockerfile
-├── frontend/
-│   ├── src/
-│   │   ├── components/   # Dashboard, wizard, calculators, maps, voice agent…
-│   │   ├── hooks/        # API, offline cache, voice & location hooks
-│   │   └── locales/      # en · hi · mr translations
-│   ├── nginx.conf
-│   └── Dockerfile
-└── docker-compose.yml
-```
-
----
-
-## 🗺 Roadmap
-
-- [ ] Live mandi price feed integration (currently a simulated feed)
-- [ ] Complete Bhashini onboarding for all 22 scheduled Indian languages
-- [ ] SMS / IVR channel for feature phones
-- [ ] Bank-officer portal with role-based authentication
-
----
-
-## 👤 Author
-
-**Tanish Lather** — Full-stack developer
-
-[![GitHub](https://img.shields.io/badge/GitHub-tan8696-181717?style=flat-square&logo=github)](https://github.com/tan8696)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Tanish_Lather-0A66C2?style=flat-square&logo=linkedin)](https://www.linkedin.com/in/tanish-lather-27456b40a)
-[![Email](https://img.shields.io/badge/Email-Contact-EA4335?style=flat-square&logo=gmail&logoColor=white)](mailto:tanishla1100@gmail.com)
-
-💼 *Open to freelance and full-time opportunities — feel free to reach out.*
-
----
-
-## 📄 License
-
-MIT License. Developed for the Smart India Hackathon.
+**Tangible Benefit:** Up to 30% increase in smallholder farm revenue, saving **₹15,000 to ₹25,000 yearly per farming household** through direct market access, optimized cold-storage tracking, and pooled logistics.

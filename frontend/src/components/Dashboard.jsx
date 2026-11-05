@@ -10,41 +10,49 @@ import InputWizard from './InputWizard';
 import Settings from './Settings';
 import SchemeCalculator from './SchemeCalculator';
 import KYCModal from './KYCModal';
+import ColdStorageTracker from './ColdStorageTracker';
+import PooledTransportBoard from './PooledTransportBoard';
+import WhatsAppVoiceSimulator from './WhatsAppVoiceSimulator';
 import { generateReport, fetchNotifications } from '../hooks/useReport';
 import GovPageHeader from './GovPageHeader';
 
 const PROFILE_AVATAR = `${import.meta.env.BASE_URL}images/profile-ramesha.jpg`;
 
 const NAV_ITEMS = [
-  { id: 'dashboard', icon: 'grid_view', label: 'Dashboard' },
+  { id: 'dashboard', icon: 'grid_view', label: 'Command Center' },
+  { id: 'weather', icon: 'thunderstorm', label: 'Climate & Worker Safety' },
+  { id: 'market', icon: 'storefront', label: 'Live Mandi & Arbitrage' },
+  { id: 'transport', icon: 'local_shipping', label: 'Pooled Transport' },
+  { id: 'cold_storage', icon: 'ac_unit', label: 'Cold Storage Locker' },
+  { id: 'simulator', icon: 'smartphone', label: 'WhatsApp / Voice Bot' },
   { id: 'feasibility', icon: 'assessment', label: 'Feasibility Reports' },
-  { id: 'history', icon: 'account_balance', label: 'Loan Management & History' },
-  { id: 'market', icon: 'storefront', label: 'Live Mandi Prices' },
-  { id: 'weather', icon: 'thunderstorm', label: 'Weather & Crop Risk' },
+  { id: 'history', icon: 'account_balance', label: 'Credit & Loans' },
   { id: 'settings', icon: 'settings', label: 'Settings' },
 ];
 
-// Keep in sync with the locales registered in src/i18n.js — offering a language
+// Keep in sync with the locales registered in src/i18n.js â€” offering a language
 // without a locale file silently falls back to English.
 const SUPPORTED_LANGUAGES = [
   { code: 'en', name: 'English' },
-  { code: 'hi', name: 'हिन्दी (Hindi)' },
-  { code: 'mr', name: 'मराठी (Marathi)' },
-  { code: 'bn', name: 'বাংলা (Bengali)' },
-  { code: 'te', name: 'తెలుగు (Telugu)' },
-  { code: 'ta', name: 'தமிழ் (Tamil)' },
-  { code: 'gu', name: 'ગુજરાતી (Gujarati)' },
-  { code: 'kn', name: 'ಕನ್ನಡ (Kannada)' },
-  { code: 'ml', name: 'മലയാളം (Malayalam)' },
-  { code: 'pa', name: 'ਪੰਜਾਬੀ (Punjabi)' },
-  { code: 'or', name: 'ଓଡ଼ିଆ (Odia)' },
+  { code: 'hi', name: 'à¤¹à¤¿à¤¨à¥à¤¦à¥€ (Hindi)' },
+  { code: 'mr', name: 'à¤®à¤°à¤¾à¤ à¥€ (Marathi)' },
+  { code: 'bn', name: 'à¦¬à¦¾à¦‚à¦²à¦¾ (Bengali)' },
+  { code: 'te', name: 'à°¤à±†à°²à±à°—à± (Telugu)' },
+  { code: 'ta', name: 'à®¤à®®à®¿à®´à¯ (Tamil)' },
+  { code: 'gu', name: 'àª—à«àªœàª°àª¾àª¤à«€ (Gujarati)' },
+  { code: 'kn', name: 'à²•à²¨à³à²¨à²¡ (Kannada)' },
+  { code: 'ml', name: 'à´®à´²à´¯à´¾à´³à´‚ (Malayalam)' },
+  { code: 'pa', name: 'à¨ªà©°à¨œà¨¾à¨¬à©€ (Punjabi)' },
+  { code: 'or', name: 'à¬“à¬¡à¬¼à¬¿à¬† (Odia)' },
 ];
 
 const MOBILE_NAV = [
-  { id: 'dashboard', icon: 'grid_view', label: 'Dashboard' },
-  { id: 'feasibility', icon: 'assessment', label: 'Reports' },
-  { id: 'history', icon: 'account_balance', label: 'Loans' },
+  { id: 'dashboard', icon: 'grid_view', label: 'Center' },
+  { id: 'weather', icon: 'thunderstorm', label: 'Climate' },
   { id: 'market', icon: 'storefront', label: 'Mandi' },
+  { id: 'transport', icon: 'local_shipping', label: 'Transport' },
+  { id: 'cold_storage', icon: 'ac_unit', label: 'Storage' },
+  { id: 'simulator', icon: 'smartphone', label: 'Bot' },
   { id: 'settings', icon: 'settings', label: 'More' },
 ];
 
@@ -212,7 +220,7 @@ export default function Dashboard({ currentView, setCurrentView, onLogout, userP
       const tenure = isMicro ? 36 : 84;
       const loanVal = Math.round(projectCostVal * 0.9);
 
-      // Financials are safe to compute offline — they are the same published
+      // Financials are safe to compute offline â€” they are the same published
       // scheme rule the backend applies. Market intelligence is NOT: it needs a
       // live OSM scan, so we omit it rather than invent a SWOT nobody produced.
       const fallbackReport = {
@@ -340,7 +348,7 @@ export default function Dashboard({ currentView, setCurrentView, onLogout, userP
                   }`}
                   aria-label={`Switch language to ${code === 'en' ? 'English' : code === 'mr' ? 'Marathi' : 'Hindi'}`}
                 >
-                  {code === 'en' ? 'EN' : code === 'mr' ? 'मराठी' : 'हिन्दी'}
+                  {code === 'en' ? 'EN' : code === 'mr' ? 'à¤®à¤°à¤¾à¤ à¥€' : 'à¤¹à¤¿à¤¨à¥à¤¦à¥€'}
                 </button>
               ))}
             </div>
@@ -492,6 +500,24 @@ export default function Dashboard({ currentView, setCurrentView, onLogout, userP
           {currentView === 'weather' && (
             <div className="max-w-7xl mx-auto">
               <WeatherRisk locationText={locationText} />
+            </div>
+          )}
+
+          {currentView === 'transport' && (
+            <div className="max-w-7xl mx-auto">
+              <PooledTransportBoard />
+            </div>
+          )}
+
+          {currentView === 'cold_storage' && (
+            <div className="max-w-7xl mx-auto">
+              <ColdStorageTracker />
+            </div>
+          )}
+
+          {currentView === 'simulator' && (
+            <div className="max-w-7xl mx-auto">
+              <WhatsAppVoiceSimulator />
             </div>
           )}
 

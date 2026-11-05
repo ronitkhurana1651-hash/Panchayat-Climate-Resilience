@@ -28,7 +28,7 @@ export default function MarketPrices() {
           setFeed({ isLive: data?.is_live === true, source: data?.source, at: data?.generated_at });
         } else {
           setCrops(offlineSampleMandiPrices());
-          setFeed({ isLive: false, source: 'Offline sample prices — server returned no arrivals' });
+          setFeed({ isLive: false, source: 'Offline sample prices â€” server returned no arrivals' });
         }
         setLoading(false);
       })
@@ -36,7 +36,7 @@ export default function MarketPrices() {
         if (!isMounted) return;
         console.warn('Mandi feed unreachable, showing offline sample:', err);
         setCrops(offlineSampleMandiPrices());
-        setFeed({ isLive: false, source: 'Offline sample prices — device is not reaching the server' });
+        setFeed({ isLive: false, source: 'Offline sample prices â€” device is not reaching the server' });
         setLoading(false);
       });
     return () => { isMounted = false; };
@@ -68,10 +68,26 @@ export default function MarketPrices() {
             <span className="material-symbols-outlined text-[16px]">
               {feed.isLive ? 'verified' : 'warning'}
             </span>
-            <span>{feed.isLive ? 'Live' : 'Demo data'} · {feed.source}</span>
-            {feed.at && <span className="opacity-70">· {new Date(feed.at).toLocaleString('en-IN')}</span>}
+            <span>{feed.isLive ? 'Live' : 'Demo data'} Â· {feed.source}</span>
+            {feed.at && <span className="opacity-70">Â· {new Date(feed.at).toLocaleString('en-IN')}</span>}
           </div>
         )}
+
+        {/* SEVA FIRST Arbitrage Callout */}
+        <div className="mt-4 p-4 rounded-xl bg-primary/10 border border-primary/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <span className="material-symbols-outlined text-primary text-2xl">local_shipping</span>
+            <div>
+              <h4 className="text-sm font-bold text-on-surface">Avoid Farmgate Distress Sales</h4>
+              <p className="text-xs text-on-surface-variant">
+                Local village traders often offer 20–40% below APMC rates. Use the <strong>Pooled Transport</strong> tab to group produce with neighbouring farmers and share freight.
+              </p>
+            </div>
+          </div>
+          <span className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-primary text-on-primary shrink-0">
+            Up to 30% Savings
+          </span>
+        </div>
       </div>
 
       {/* Search & Filters */}
@@ -133,13 +149,13 @@ export default function MarketPrices() {
                 </div>
                 <div>
                   <h3 className="font-headline-md text-headline-md text-on-surface">{crop.name}</h3>
-                  <p className="font-label-sm text-label-sm text-on-surface-variant">{crop.grade} • {crop.mandi}</p>
+                  <p className="font-label-sm text-label-sm text-on-surface-variant">{crop.grade} â€¢ {crop.mandi}</p>
                 </div>
               </div>
               <span className={`px-3 py-1 rounded-full font-label-sm text-label-sm ${crop.trendBg}`}>{crop.status}</span>
             </div>
             <div className="flex items-end gap-3 mb-6">
-              <span className="font-display-lg text-display-lg text-on-surface">₹{crop.price.toLocaleString()}</span>
+              <span className="font-display-lg text-display-lg text-on-surface">â‚¹{crop.price.toLocaleString()}</span>
               <span className="font-body-md text-body-md text-on-surface-variant pb-2">/ {crop.unit}</span>
             </div>
             
@@ -147,8 +163,8 @@ export default function MarketPrices() {
               <span className="material-symbols-outlined text-sm">
                 {crop.trend === 'up' ? 'trending_up' : crop.trend === 'down' ? 'trending_down' : 'trending_flat'}
               </span>
-              {crop.trend === 'up' ? '+' : crop.trend === 'down' ? '-' : ''}₹{crop.trendAmount} ({crop.trendPercent}%)
-              <span className="opacity-70 font-body-sm">· {crop.trendBasis || 'day-on-day'}</span>
+              {crop.trend === 'up' ? '+' : crop.trend === 'down' ? '-' : ''}â‚¹{crop.trendAmount} ({crop.trendPercent}%)
+              <span className="opacity-70 font-body-sm">Â· {crop.trendBasis || 'day-on-day'}</span>
             </div>
 
             {/* Where today's modal price sits inside the day's min-max band */}
@@ -157,12 +173,12 @@ export default function MarketPrices() {
                 <div
                   className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-primary border-2 border-surface-container-lowest"
                   style={{ left: crop.barHeight || '50%' }}
-                  title={`Modal ₹${crop.price?.toLocaleString()}`}
+                  title={`Modal â‚¹${crop.price?.toLocaleString()}`}
                 ></div>
               </div>
               <div className="flex justify-between mt-2 font-label-sm text-label-sm text-on-surface-variant">
-                <span>Low ₹{(crop.minPrice ?? crop.price)?.toLocaleString()}</span>
-                <span>High ₹{(crop.maxPrice ?? crop.price)?.toLocaleString()}</span>
+                <span>Low â‚¹{(crop.minPrice ?? crop.price)?.toLocaleString()}</span>
+                <span>High â‚¹{(crop.maxPrice ?? crop.price)?.toLocaleString()}</span>
               </div>
             </div>
           </div>
